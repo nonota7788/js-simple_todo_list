@@ -1,0 +1,110 @@
+/*-------------------------------*/
+/* BASIC SETUP */
+/*-------------------------------*/
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 20px;
+  font-family: "Lato", sans-serif;
+  font-weight: 300;
+  color: rgb(202, 202, 202);
+}
+
+/*-------------------------------*/
+/* RESUABLE COMPONENTS */
+/*-------------------------------*/
+/*--- BUTTON ---*/
+.btn {
+  color: #fff;
+  width: 100px;
+  border-radius: 5px;
+  padding: 5px 0;
+}
+
+.btn-add {
+  background-color: #3498db;
+  border: 1px solid #3498db;
+}
+
+.btn-update {
+  background-color: #2ecc71;
+  border: 1px solid #2ecc71;
+  margin-right: 5px;
+}
+
+.btn-delete {
+  background-color: #e74c3c;
+  border: 1px solid #e74c3c;
+}
+
+/* --- INPUT ---*/
+input:focus,
+.btn:focus {
+  outline: none;
+}
+
+input {
+  padding: 7px;
+  border-radius: 5px;
+  border: 2px solid rgb(158, 158, 158);
+}
+
+/*--- WRAPPER ---*/
+.todo-list {
+  width: 60%;
+  margin: 20px auto 0 auto;
+  padding: 60px;
+  border: 2px solid rgb(158, 158, 158);
+}
+
+/*-------------------------------*/
+/* HEADER */
+/*-------------------------------*/
+
+.header {
+  margin-bottom: 40px;
+}
+
+.title {
+  font-size: 200%;
+  text-align: center;
+  margin: 0 0 20px 0;
+}
+
+.header input {
+  width: 60%;
+  margin: 0 10% 0 30%;
+  height: 35px;
+}
+
+/*-------------------------------*/
+/* TODO-BOX */
+/*-------------------------------*/
+ul {
+  display: block;
+}
+
+.todo-item {
+  border-bottom: 2px solid rgb(158, 158, 158);
+  padding: 5px;
+  margin-bottom: 20px;
+}
+
+.todo-item:last-child {
+  margin-bottom: 0;
+}
+
+ul input {
+  width: 60%;
+  margin: 0 10% 0 30%;
+  border: none;
+  border-radius: 0%;
+  font-size: 100%;
+  font-weight: 300;
+}
