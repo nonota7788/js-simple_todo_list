@@ -55,6 +55,11 @@ input {
   border: 2px solid rgb(158, 158, 158);
 }
 
+.warning {
+  color: #c0392b;
+  font-size: 70%;
+}
+
 /*--- WRAPPER ---*/
 .todo-row {
   height: 600px;
