@@ -4,11 +4,12 @@ var todos;
 todos = [];
 
 document.getElementById("btn-add").addEventListener("click", function() {
+  var btn_add = document.getElementById("added-todo");
   if (todos.length < 5) {
     var addedTodo;
     //入力されたTODOを読み取る
-    addedTodo = document.getElementById("added-todo").value;
-    document.getElementById("added-todo").value = "";
+    addedTodo = btn_add.value;
+    btn_add.value = "";
 
     // 1,配列todosに入力された値（todo）を格納する
     todos.push(addedTodo);
@@ -36,14 +37,27 @@ document.getElementById("btn-add").addEventListener("click", function() {
      * 配列todosに格納されるtodoのインデックス番号、それぞれの値は、全て同じ値（０〜５）で紐づいている。
      */
     var allTodoList = document.querySelectorAll(".todo-item");
-    var allBtnDletete = document.querySelectorAll(".btn-delete");
+    var allBtnUpdate = document.querySelectorAll(".btn-update");
+    var allBtnDlete = document.querySelectorAll(".btn-delete");
     for (var i = 0; i < todos.length; i++) {
       allTodoList[i].setAttribute("id", i);
       document.getElementById(i).childNodes[0].value = todos[i];
-      allBtnDletete[i].setAttribute("onclick", `deleteTodo(${i})`);
+      allBtnUpdate[i].setAttribute("onclick", `updateTodo(${i})`);
+      allBtnDlete[i].setAttribute("onclick", `deleteTodo(${i})`);
     }
+  } else {
+    //todoが５個追加されているにも関わらず、それ以上追加しようとした場合に警告文を表示する
+    var message = "You can only add up to 5 todos!!";
+    btn_add.value = message;
+    btn_add.classList.add("warning");
   }
 });
+
+//UPDATEボタンを押した時に実行される関数
+function updateTodo(todoId) {
+  var renewedTodo = document.getElementById(todoId).childNodes[0].value;
+  todos[todoId] = renewedTodo;
+}
 
 //delteボタンを押したときに実行される関数
 function deleteTodo(todoId) {
@@ -63,4 +77,7 @@ function deleteTodo(todoId) {
   deletedList.parentNode.removeChild(deletedList);
   //配列todosから削除する
   todos.splice(todoId, 1);
+  //warningクラスがついている場合は取り外す
+  document.getElementById("added-todo").classList.remove("warning");
+  document.getElementById("added-todo").value = "";
 }
