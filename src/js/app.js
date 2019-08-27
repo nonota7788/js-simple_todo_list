@@ -27,6 +27,7 @@ document.getElementById("btn-add").addEventListener("click", function() {
     li.appendChild(btn_delete);
     btn_update.classList.add("btn", "btn-update");
     btn_delete.classList.add("btn", "btn-delete");
+    input.value = todos[todos.length - 1];
     btn_update.textContent = "UPDATE";
     btn_delete.textContent = "DELETE";
     /**
@@ -36,6 +37,8 @@ document.getElementById("btn-add").addEventListener("click", function() {
      * liのid属性、更新・削除ボタンのonclick属性の値deleteTodo関数・updateTodo関数の引数、
      * 配列todosに格納されるtodoのインデックス番号、それぞれの値は、全て同じ値（０〜５）で紐づいている。
      */
+
+    /*ここを修正する
     var allTodoList = document.querySelectorAll(".todo-item");
     var allBtnUpdate = document.querySelectorAll(".btn-update");
     var allBtnDlete = document.querySelectorAll(".btn-delete");
@@ -44,6 +47,27 @@ document.getElementById("btn-add").addEventListener("click", function() {
       document.getElementById(i).childNodes[0].value = todos[i];
       allBtnUpdate[i].setAttribute("onclick", `updateTodo(${i})`);
       allBtnDlete[i].setAttribute("onclick", `deleteTodo(${i})`);
+    }
+    */
+    if (todos.length !== 1) {
+      var rearmostTodo = document.querySelectorAll(".todo-item")[
+        todos.length - 1
+      ];
+      rearmostTodo.setAttribute("id", todos.length - 1);
+      rearmostTodo.childNodes[1].setAttribute(
+        "onclick",
+        `updateTodo(${todos.length - 1})`
+      );
+      rearmostTodo.childNodes[2].setAttribute(
+        "onclick",
+        `deleteTodo(${todos.length - 1})`
+      );
+
+      console.log(rearmostTodo);
+    } else {
+      li.setAttribute("id", 0);
+      btn_update.setAttribute("onclick", "updateTodo(0)");
+      btn_delete.setAttribute("onclick", "deleteTodo(0)");
     }
   } else {
     //todoが５個追加されているにも関わらず、それ以上追加しようとした場合に警告文を表示する
