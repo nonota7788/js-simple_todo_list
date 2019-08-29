@@ -20,15 +20,11 @@ document.getElementById("btn-add").addEventListener("click", function() {
     ol.appendChild(li);
     li.classList.add("todo-item");
     var input = document.createElement("input");
-    var btn_update = document.createElement("button");
     var btn_delete = document.createElement("button");
     li.appendChild(input);
-    li.appendChild(btn_update);
     li.appendChild(btn_delete);
-    btn_update.classList.add("btn", "btn-update");
     btn_delete.classList.add("btn", "btn-delete");
     input.value = todos[todos.length - 1];
-    btn_update.textContent = "UPDATE";
     btn_delete.textContent = "DELETE";
 
     //3, 新しく追加されたtodoに、配列todosの中で割り振られたindexと同じ番号を振る。
@@ -42,11 +38,11 @@ document.getElementById("btn-add").addEventListener("click", function() {
     rearmostTodoIndex = todos.length - 1;
     rearmostTodo = document.querySelectorAll(".todo-item")[rearmostTodoIndex];
     rearmostTodo.setAttribute("id", rearmostTodoIndex);
-    rearmostTodo.childNodes[1].setAttribute(
-      "onclick",
+    rearmostTodo.childNodes[0].setAttribute(
+      "onkeyup",
       `updateTodo(${rearmostTodoIndex})`
     );
-    rearmostTodo.childNodes[2].setAttribute(
+    rearmostTodo.childNodes[1].setAttribute(
       "onclick",
       `deleteTodo(${rearmostTodoIndex})`
     );
@@ -72,7 +68,11 @@ function deleteTodo(todoId) {
     var updatedId = updatedList.id;
     updatedId = updatedId - 1;
     updatedList.id = updatedId;
-    updatedList.childNodes[2].setAttribute(
+    updatedList.childNodes[0].setAttribute(
+      "onkeyup",
+      `updateTodo(${updatedId})`
+    );
+    updatedList.childNodes[1].setAttribute(
       "onclick",
       `deleteTodo(${updatedId})`
     );
