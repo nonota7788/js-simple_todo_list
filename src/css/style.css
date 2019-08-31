@@ -32,9 +32,9 @@ html {
   border: 1px solid #3498db;
 }
 
-.btn-update {
-  background-color: #2ecc71;
-  border: 1px solid #2ecc71;
+.btn-detail {
+  background-color: #f1c40f;
+  border: 1px solid #f1c40f;
   margin-right: 5px;
 }
 
@@ -60,10 +60,54 @@ input {
   font-size: 70%;
 }
 
+/*--- MODAL ---*/
+.modal {
+  display: none;
+  position: fixed;
+  top: 150px;
+  left: 50%;
+  z-index: 20;
+  transform: translate(-50%);
+  width: 450px;
+  height: 450px;
+  background-color: rgb(245, 245, 245);
+  box-shadow: 0 0 8px rgb(177, 177, 177);
+  border-radius: 15px;
+}
+
+.modal-header {
+  padding: 20px;
+  background-color: #fff;
+  position: relative;
+}
+
+.modal-header div {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: rgb(59, 59, 59);
+}
+
+.close {
+  color: #aaa;
+  position: absolute;
+  left: 90%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 /*--- WRAPPER ---*/
 .todo-row {
   height: 600px;
-  width: 500px;
+  max-width: 500px;
   margin: 20px auto 0 auto;
   padding: 60px 40px;
   border: 2px solid rgb(158, 158, 158);

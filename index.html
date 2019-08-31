@@ -6,10 +6,20 @@
       href="https://fonts.googleapis.com/css?family=Lato:100,300,300i,400&display=swap"
       rel="stylesheet"
     />
+
     <title>Simple TODO</title>
   </head>
   <body>
     <div class="todo-row">
+      <!--modal-->
+      <div id="myModal" class="modal">
+        <div class="modal-header">
+          <span class="close" onclick="closeModal()">Done</span>
+          <div>Details</div>
+        </div>
+      </div>
+
+      <!--todoList-->
       <div class="title">Simple TODO</div>
       <input type="text" placeholder="Add your todo" id="added-todo" />
       <button type="button" class="btn btn-add" id="btn-add">

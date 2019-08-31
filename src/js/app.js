@@ -21,10 +21,14 @@ document.getElementById("btn-add").addEventListener("click", function() {
     li.classList.add("todo-item");
     var input = document.createElement("input");
     var btn_delete = document.createElement("button");
+    var btn_detail = document.createElement("button");
     li.appendChild(input);
+    li.appendChild(btn_detail);
     li.appendChild(btn_delete);
+    btn_detail.classList.add("btn", "btn-detail");
     btn_delete.classList.add("btn", "btn-delete");
     input.value = todos[todos.length - 1];
+    btn_detail.textContent = "DETAIL";
     btn_delete.textContent = "DELETE";
 
     //3, 新しく追加されたtodoに、配列todosの中で割り振られたindexと同じ番号を振る。
@@ -43,6 +47,10 @@ document.getElementById("btn-add").addEventListener("click", function() {
       `updateTodo(${rearmostTodoIndex})`
     );
     rearmostTodo.childNodes[1].setAttribute(
+      "onclick",
+      `setDetail(${rearmostTodoIndex})`
+    );
+    rearmostTodo.childNodes[2].setAttribute(
       "onclick",
       `deleteTodo(${rearmostTodoIndex})`
     );
@@ -72,7 +80,7 @@ function deleteTodo(todoId) {
       "onkeyup",
       `updateTodo(${updatedId})`
     );
-    updatedList.childNodes[1].setAttribute(
+    updatedList.childNodes[2].setAttribute(
       "onclick",
       `deleteTodo(${updatedId})`
     );
@@ -85,4 +93,14 @@ function deleteTodo(todoId) {
   //warningクラスがついている場合は取り外す
   document.getElementById("added-todo").classList.remove("warning");
   document.getElementById("added-todo").value = "";
+}
+
+//個々のtodoの詳細を設定できるモーダルの表示
+function setDetail(todoId) {
+  document.getElementById("myModal").style.display = "block";
+}
+
+//モーダルを閉じる
+function closeModal() {
+  document.getElementById("myModal").style.display = "none";
 }
