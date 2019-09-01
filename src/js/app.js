@@ -1,7 +1,9 @@
-var todos;
+var todos, modal;
 
 //todoを管理するための配列
 todos = [];
+//最初、モーダルは閉じているからfalseが入る
+modal = false;
 
 document.getElementById("btn-add").addEventListener("click", function() {
   var btn_add = document.getElementById("added-todo");
@@ -64,7 +66,13 @@ document.getElementById("btn-add").addEventListener("click", function() {
 
 //UPDATEボタンを押した時に実行される関数
 function updateTodo(todoId) {
-  var renewedTodo = document.getElementById(todoId).childNodes[0].value;
+  var renewedTodo;
+  if (modal) {
+    renewedTodo = document.getElementById("title").value;
+    document.getElementById(todoId).childNodes[0].value = renewedTodo;
+  } else {
+    renewedTodo = document.getElementById(todoId).childNodes[0].value;
+  }
   todos[todoId] = renewedTodo;
 }
 
@@ -79,6 +87,10 @@ function deleteTodo(todoId) {
     updatedList.childNodes[0].setAttribute(
       "onkeyup",
       `updateTodo(${updatedId})`
+    );
+    updatedList.childNodes[1].setAttribute(
+      "onclick",
+      `setDetail(${updatedId})`
     );
     updatedList.childNodes[2].setAttribute(
       "onclick",
@@ -97,10 +109,17 @@ function deleteTodo(todoId) {
 
 //個々のtodoの詳細を設定できるモーダルの表示
 function setDetail(todoId) {
+  modal = true;
   document.getElementById("myModal").style.display = "block";
+  //1,todo名の表示
+  var title = document.getElementById("title");
+  title.setAttribute("onkeyup", `updateTodo(${todoId})`);
+  title.value = todos[todoId];
+  //2,todoに関連したファイルをアップロード
 }
 
 //モーダルを閉じる
 function closeModal() {
+  modal = false;
   document.getElementById("myModal").style.display = "none";
 }
