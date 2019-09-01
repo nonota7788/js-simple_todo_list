@@ -1,7 +1,9 @@
-var todos;
+var todos, modal;
 
 //todoを管理するための配列
 todos = [];
+//最初、モーダルは閉じているからfalseが入る
+modal = false;
 
 document.getElementById("btn-add").addEventListener("click", function() {
   var btn_add = document.getElementById("added-todo");
@@ -21,10 +23,14 @@ document.getElementById("btn-add").addEventListener("click", function() {
     li.classList.add("todo-item");
     var input = document.createElement("input");
     var btn_delete = document.createElement("button");
+    var btn_detail = document.createElement("button");
     li.appendChild(input);
+    li.appendChild(btn_detail);
     li.appendChild(btn_delete);
+    btn_detail.classList.add("btn", "btn-detail");
     btn_delete.classList.add("btn", "btn-delete");
     input.value = todos[todos.length - 1];
+    btn_detail.textContent = "DETAIL";
     btn_delete.textContent = "DELETE";
 
     //3, 新しく追加されたtodoに、配列todosの中で割り振られたindexと同じ番号を振る。
@@ -44,6 +50,10 @@ document.getElementById("btn-add").addEventListener("click", function() {
     );
     rearmostTodo.childNodes[1].setAttribute(
       "onclick",
+      `setDetail(${rearmostTodoIndex})`
+    );
+    rearmostTodo.childNodes[2].setAttribute(
+      "onclick",
       `deleteTodo(${rearmostTodoIndex})`
     );
   } else {
@@ -56,7 +66,13 @@ document.getElementById("btn-add").addEventListener("click", function() {
 
 //UPDATEボタンを押した時に実行される関数
 function updateTodo(todoId) {
-  var renewedTodo = document.getElementById(todoId).childNodes[0].value;
+  var renewedTodo;
+  if (modal) {
+    renewedTodo = document.getElementById("title").value;
+    document.getElementById(todoId).childNodes[0].value = renewedTodo;
+  } else {
+    renewedTodo = document.getElementById(todoId).childNodes[0].value;
+  }
   todos[todoId] = renewedTodo;
 }
 
@@ -74,6 +90,10 @@ function deleteTodo(todoId) {
     );
     updatedList.childNodes[1].setAttribute(
       "onclick",
+      `setDetail(${updatedId})`
+    );
+    updatedList.childNodes[2].setAttribute(
+      "onclick",
       `deleteTodo(${updatedId})`
     );
   }
@@ -85,4 +105,21 @@ function deleteTodo(todoId) {
   //warningクラスがついている場合は取り外す
   document.getElementById("added-todo").classList.remove("warning");
   document.getElementById("added-todo").value = "";
+}
+
+//個々のtodoの詳細を設定できるモーダルの表示
+function setDetail(todoId) {
+  modal = true;
+  document.getElementById("myModal").style.display = "block";
+  //1,todo名の表示
+  var title = document.getElementById("title");
+  title.setAttribute("onkeyup", `updateTodo(${todoId})`);
+  title.value = todos[todoId];
+  //2,todoに関連したファイルをアップロード
+}
+
+//モーダルを閉じる
+function closeModal() {
+  modal = false;
+  document.getElementById("myModal").style.display = "none";
 }
