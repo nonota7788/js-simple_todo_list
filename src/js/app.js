@@ -1,20 +1,21 @@
 var todos, modal;
 
 //todoを管理するための配列
-todos = [];
+todos = { name: [], memo: [] };
 //最初、モーダルは閉じているからfalseが入る
 modal = false;
 
 document.getElementById("btn-add").addEventListener("click", function() {
   var btn_add = document.getElementById("added-todo");
-  if (todos.length < 5) {
+  if (todos.name.length < 5) {
     var addedTodo;
     //入力されたTODOを読み取る
     addedTodo = btn_add.value;
     btn_add.value = "";
 
     // 1, 配列todosに入力された値（todo）を格納する
-    todos.push(addedTodo);
+    todos.name.push(addedTodo);
+    todos.memo.push("");
 
     // 2, todoリストに表示する
     var ol = document.querySelector("ol");
@@ -29,7 +30,8 @@ document.getElementById("btn-add").addEventListener("click", function() {
     li.appendChild(btn_delete);
     btn_detail.classList.add("btn", "btn-detail");
     btn_delete.classList.add("btn", "btn-delete");
-    input.value = todos[todos.length - 1];
+    var rearmostTodoIndex = todos.name.length - 1;
+    input.value = todos.name[rearmostTodoIndex];
     btn_detail.textContent = "DETAIL";
     btn_delete.textContent = "DELETE";
 
@@ -39,9 +41,8 @@ document.getElementById("btn-add").addEventListener("click", function() {
      * これにより、liのid属性、更新・削除ボタンのonclick属性の値deleteTodo関数・updateTodo関数の引数、
      * 配列todosに格納されるtodoのインデックス番号、それぞれの値は、全て同じ値（０〜５）で紐づいている。
      */
-    var rearmostTodo, rearmostTodoIndex;
+    var rearmostTodo;
 
-    rearmostTodoIndex = todos.length - 1;
     rearmostTodo = document.querySelectorAll(".todo-item")[rearmostTodoIndex];
     rearmostTodo.setAttribute("id", rearmostTodoIndex);
     rearmostTodo.childNodes[0].setAttribute(
@@ -56,6 +57,7 @@ document.getElementById("btn-add").addEventListener("click", function() {
       "onclick",
       `deleteTodo(${rearmostTodoIndex})`
     );
+    console.log(todos, todos.name, todos.memo);
   } else {
     //todoが５個追加されているにも関わらず、それ以上追加しようとした場合に警告文を表示する
     var message = "You can only add up to 5 todos!!";
@@ -73,13 +75,14 @@ function updateTodo(todoId) {
   } else {
     renewedTodo = document.getElementById(todoId).childNodes[0].value;
   }
-  todos[todoId] = renewedTodo;
+  todos.name[todoId] = renewedTodo;
+  console.log(todos.name);
 }
 
 //delteボタンを押したときに実行される関数
 function deleteTodo(todoId) {
   //各リストに振られている番号を1つ繰り下げる
-  for (var i = 0; i < todos.length - (todoId + 1); i++) {
+  for (var i = 0; i < todos.name.length - (todoId + 1); i++) {
     var updatedList = document.getElementById(`${todoId + (i + 1)}`);
     var updatedId = updatedList.id;
     updatedId = updatedId - 1;
@@ -101,10 +104,13 @@ function deleteTodo(todoId) {
   var deletedList = document.getElementById(todoId);
   deletedList.parentNode.removeChild(deletedList);
   //配列todosから削除する
-  todos.splice(todoId, 1);
+  //todos.splice(todoId, 1);
+  todos.name.splice(todoId, 1);
+  todos.memo.splice(todoId, 1);
   //warningクラスがついている場合は取り外す
   document.getElementById("added-todo").classList.remove("warning");
   document.getElementById("added-todo").value = "";
+  console.log(todos.name);
 }
 
 //個々のtodoの詳細を設定できるモーダルの表示
@@ -114,12 +120,24 @@ function setDetail(todoId) {
   //1,todo名の表示
   var title = document.getElementById("title");
   title.setAttribute("onkeyup", `updateTodo(${todoId})`);
-  title.value = todos[todoId];
-  //2,todoに関連したファイルをアップロード
+  title.value = todos.name[todoId];
+  //2,todoに関連したメモを表示
+  var todo_memo = document.getElementById("memo");
+  todo_memo.setAttribute("onkeyup", `handleMemo(${todoId})`);
+  todos.memo[todoId]
+    ? (todo_memo.value = todos.memo[todoId])
+    : (todo_memo.value = "");
 }
 
 //モーダルを閉じる
 function closeModal() {
   modal = false;
   document.getElementById("myModal").style.display = "none";
+}
+
+//todoに関連したメモを追加する関数
+function handleMemo(todoId) {
+  var addedMemo = document.getElementById("memo").value;
+  todos.memo[todoId] = addedMemo;
+  console.log(todos.memo);
 }
