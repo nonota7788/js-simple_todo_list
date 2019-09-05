@@ -57,7 +57,6 @@ document.getElementById("btn-add").addEventListener("click", function() {
       "onclick",
       `deleteTodo(${rearmostTodoIndex})`
     );
-    console.log(todos, todos.name, todos.memo);
   } else {
     //todoが５個追加されているにも関わらず、それ以上追加しようとした場合に警告文を表示する
     var message = "You can only add up to 5 todos!!";
@@ -76,7 +75,6 @@ function updateTodo(todoId) {
     renewedTodo = document.getElementById(todoId).childNodes[0].value;
   }
   todos.name[todoId] = renewedTodo;
-  console.log(todos.name);
 }
 
 //delteボタンを押したときに実行される関数
@@ -104,13 +102,11 @@ function deleteTodo(todoId) {
   var deletedList = document.getElementById(todoId);
   deletedList.parentNode.removeChild(deletedList);
   //配列todosから削除する
-  //todos.splice(todoId, 1);
   todos.name.splice(todoId, 1);
   todos.memo.splice(todoId, 1);
   //warningクラスがついている場合は取り外す
   document.getElementById("added-todo").classList.remove("warning");
   document.getElementById("added-todo").value = "";
-  console.log(todos.name);
 }
 
 //個々のtodoの詳細を設定できるモーダルの表示
@@ -139,5 +135,4 @@ function closeModal() {
 function handleMemo(todoId) {
   var addedMemo = document.getElementById("memo").value;
   todos.memo[todoId] = addedMemo;
-  console.log(todos.memo);
 }
