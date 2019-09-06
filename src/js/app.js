@@ -1,4 +1,4 @@
-var todos, modal, update;
+var todos, modal, changeble;
 
 //todoを管理するための配列
 todos = { name: [], memo: [] };
@@ -6,27 +6,14 @@ todos = { name: [], memo: [] };
 modal = false;
 
 document.getElementById("btn-add").addEventListener("click", function() {
-  var btn_add = document.getElementById("added-todo");
+  var addedTodo = document.getElementById("added-todo");
+  validate(addedTodo);
 
-  //入力されたTODOを読み取る
-  var addedTodo = btn_add.value;
-  if (todos.name.length < 5 && validateInput(addedTodo)) {
-    addTodo();
-  } else if (todos.name.length < 5 === false) {
-    //todoが５個追加されているにも関わらず、それ以上追加しようとした場合に警告文を表示する
-    var message = "You can only add up to 5 todos!!";
-    btn_add.value = message;
-    btn_add.classList.add("warning");
-  }
-
-  //todoを追加する関数
-  function addTodo() {
-    //入力欄の初期化
-    btn_add.value = "";
-
+  if (changeble) {
     // 1, 配列todosに入力された値（todo）を格納する
-    todos.name.push(addedTodo);
+    todos.name.push(addedTodo.value);
     todos.memo.push("");
+    addedTodo.value = "";
 
     // 2, todoリストに表示する
     var ol = document.querySelector("ol");
@@ -35,6 +22,7 @@ document.getElementById("btn-add").addEventListener("click", function() {
     li.classList.add("todo-item");
     var input = document.createElement("input");
     li.appendChild(input);
+    input.classList.add("name");
     var btn_delete = document.createElement("button");
     var btn_detail = document.createElement("button");
     var btn_update = document.createElement("button");
@@ -46,9 +34,9 @@ document.getElementById("btn-add").addEventListener("click", function() {
     btn_delete.classList.add("btn", "btn-delete");
     var rearmostTodoIndex = todos.name.length - 1;
     input.value = todos.name[rearmostTodoIndex];
-    btn_update.textContent = "UPDATE";
+    btn_update.textContent = "Update";
     btn_detail.textContent = "DETAIL";
-    btn_delete.textContent = "DELETE";
+    btn_delete.textContent = "Delete";
 
     //3, 新しく追加されたtodoに、配列todosの中で割り振られたindexと同じ番号を振る。
     /**
@@ -60,6 +48,7 @@ document.getElementById("btn-add").addEventListener("click", function() {
 
     rearmostTodo = document.querySelectorAll(".todo-item")[rearmostTodoIndex];
     rearmostTodo.setAttribute("id", rearmostTodoIndex);
+    rearmostTodo.childNodes[0].setAttribute("onkeyup", "validate(this)");
     rearmostTodo.childNodes[1].setAttribute(
       "onclick",
       `updateTodo(${rearmostTodoIndex})`
@@ -72,45 +61,42 @@ document.getElementById("btn-add").addEventListener("click", function() {
       "onclick",
       `deleteTodo(${rearmostTodoIndex})`
     );
-    update = true;
-  }
-  console.log(todos, todos.name);
-});
-
-//warningクラスを外すタイミングを監視するイベントリスナとハンドラ
-document.querySelector(".input").addEventListener("input", function() {
-  var btn_add = document.getElementById("added-todo");
-
-  if (btn_add.value === "") {
-    btn_add.classList.remove("warning");
   }
 });
 
-//UPDATEボタンを押した時に実行される関数
+//追加されるtodo名(todos.name)が空文字列ではないことのチェックをする関数
+function validate(tood_name) {
+  //モーダルからtodo名を更新する場合
+  if (modal) {
+    tood_name = document.getElementById("title").value;
+    var btn_done = document.querySelector(".close").classList;
+    btn_done.remove("unchangeble", "changeble");
+    tood_name === "" ? btn_done.add("unchangeble") : btn_done.add("changeble");
+  } else {
+    tood_name = tood_name.value;
+  }
+  tood_name === "" ? (changeble = false) : (changeble = true);
+}
+
+//UPDATEボタン、又は、モダールのDONEボタンを押した時に実行されるtodoの更新を担う関数
 function updateTodo(todoId) {
-  if (update) {
+  if (changeble) {
     var renewedTodo;
+    //モーダルからの更新か、それともリストからの更新かで条件分岐
     if (modal) {
       renewedTodo = document.getElementById("title").value;
       document.getElementById(todoId).childNodes[0].value = renewedTodo;
+      todos.name[todoId] = renewedTodo;
+      document.getElementById("myModal").style.display = "none";
+      modal = false;
     } else {
       renewedTodo = document.getElementById(todoId).childNodes[0].value;
-    }
-
-    if (renewedTodo === "") {
-      document.getElementById(todoId).childNodes[0].value = todos.name[todoId];
-    } else {
       todos.name[todoId] = renewedTodo;
     }
-
-    document.getElementById("myModal").style.display = "none";
-    modal = false;
   }
-
-  console.log(todos, todos.name, todos.memo);
 }
 
-//todoを更新した際にUPDATボタンを押し忘れたら、更新直前のtodoが表示される
+//todoを更新した際にUPDATボタンを押し忘れたり、空文字で更新しようとしたら、更新直前のtodoが表示される
 window.addEventListener("click", function() {
   for (var i = 0; i < todos.memo.length; i++) {
     document.getElementById(i).childNodes[0].value = todos.name[i];
@@ -119,6 +105,7 @@ window.addEventListener("click", function() {
 
 //個々のtodoの詳細を設定できるモーダルの表示
 function setDetail(todoId) {
+  changeble = true;
   modal = true;
   document.getElementById("myModal").style.display = "block";
   var btn_done = document.querySelector(".close");
@@ -128,26 +115,14 @@ function setDetail(todoId) {
   //1,todo名の表示
   var title = document.getElementById("title");
   title.value = todos.name[todoId];
-  title.setAttribute("onkeyup", `validateTitle(${todoId})`);
+  title.setAttribute("onkeyup", "validate()");
+
   //2,todoに関連したメモを表示
   var todo_memo = document.getElementById("memo");
   todo_memo.setAttribute("onkeyup", `handleMemo(${todoId})`);
   todos.memo[todoId]
     ? (todo_memo.value = todos.memo[todoId])
     : (todo_memo.value = "");
-}
-
-function validateTitle(todoId) {
-  var title = document.getElementById("title").value;
-  var btn_done = document.querySelector(".close");
-  btn_done.classList.remove("unchangeble", "changeble");
-  if (title === "") {
-    update = false;
-    btn_done.classList.add("unchangeble");
-  } else {
-    update = true;
-    btn_done.classList.add("changeble");
-  }
 }
 
 //delteボタンを押したときに実行される関数
@@ -177,30 +152,10 @@ function deleteTodo(todoId) {
   //配列todosから削除する
   todos.name.splice(todoId, 1);
   todos.memo.splice(todoId, 1);
-  //warningクラスがついている場合は取り外す
-  document.getElementById("added-todo").classList.remove("warning");
-  document.getElementById("added-todo").value = "";
-
-  console.log(todos, todos.name);
 }
 
 //todoに関連したメモを追加する関数
 function handleMemo(todoId) {
   var addedMemo = document.getElementById("memo").value;
   todos.memo[todoId] = addedMemo;
-}
-
-//追加されるtodoが空文字列ではないことのチェックをする関数
-function validateInput(input) {
-  var btn_add = document.getElementById("added-todo");
-  if (btn_add.classList.contains("warning")) {
-    btn_add.value = "Todo's name must be filled out !!";
-    return false;
-  } else if (input === "") {
-    btn_add.value = "Todo's name must be filled out !!";
-    btn_add.classList.add("warning");
-    return false;
-  } else {
-    return true;
-  }
 }
