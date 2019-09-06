@@ -14,8 +14,8 @@
       <!--modal-->
       <div id="myModal" class="modal">
         <div class="modal-header">
-          <span class="close" onclick="closeModal()">Done</span>
           <div>Details</div>
+          <span class="close">Done</span>
         </div>
         <div class="detail">
           <input type="text" id="title" />
@@ -30,9 +30,14 @@
 
       <!--todoList-->
       <div class="title">Simple TODO</div>
-      <input type="text" placeholder="Add your todo" id="added-todo" />
+      <input
+        type="text"
+        placeholder="Add your todo"
+        class="input"
+        id="added-todo"
+      />
       <button type="button" class="btn btn-add" id="btn-add">
-        ADD
+        Add
       </button>
       <ol class="todo-box"></ol>
     </div>
