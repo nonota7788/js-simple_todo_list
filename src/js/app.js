@@ -5,7 +5,7 @@ todos = { name: [], memo: [] };
 //最初、モーダルは閉じているからfalseが入る
 modal = false;
 
-document.getElementById("btn-add").addEventListener("click", function() {
+document.querySelector(".btn-add").addEventListener("click", function() {
   var addedTodo = document.getElementById("added-todo");
   validate(addedTodo);
 
@@ -16,27 +16,28 @@ document.getElementById("btn-add").addEventListener("click", function() {
     addedTodo.value = "";
 
     // 2, todoリストに表示する
-    var ol = document.querySelector("ol");
+    var ul = document.querySelector("ul");
     var li = document.createElement("li");
-    ol.appendChild(li);
+    ul.appendChild(li);
     li.classList.add("todo-item");
     var input = document.createElement("input");
     li.appendChild(input);
     input.classList.add("name");
-    var btn_delete = document.createElement("button");
-    var btn_detail = document.createElement("button");
+    var btn_delete = document.createElement("ion-icon");
     var btn_update = document.createElement("button");
+    var btn_detail = document.createElement("ion-icon");
     li.appendChild(btn_update);
-    li.appendChild(btn_detail);
     li.appendChild(btn_delete);
+    li.appendChild(btn_detail);
     btn_update.classList.add("btn", "btn-update");
-    btn_detail.classList.add("btn", "btn-detail");
-    btn_delete.classList.add("btn", "btn-delete");
+
+    btn_delete.setAttribute("name", "trash");
+    btn_detail.setAttribute("name", "clipboard");
+    btn_delete.classList.add("btn-delete");
+    btn_detail.classList.add("btn-detail");
     var rearmostTodoIndex = todos.name.length - 1;
     input.value = todos.name[rearmostTodoIndex];
     btn_update.textContent = "Update";
-    btn_detail.textContent = "DETAIL";
-    btn_delete.textContent = "Delete";
 
     //3, 新しく追加されたtodoに、配列todosの中で割り振られたindexと同じ番号を振る。
     /**
@@ -48,34 +49,40 @@ document.getElementById("btn-add").addEventListener("click", function() {
 
     rearmostTodo = document.querySelectorAll(".todo-item")[rearmostTodoIndex];
     rearmostTodo.setAttribute("id", rearmostTodoIndex);
-    rearmostTodo.childNodes[0].setAttribute("onkeyup", "validate(this)");
+    rearmostTodo.childNodes[0].setAttribute("onkeyup", "validate(this, this)");
     rearmostTodo.childNodes[1].setAttribute(
       "onclick",
       `updateTodo(${rearmostTodoIndex})`
     );
     rearmostTodo.childNodes[2].setAttribute(
       "onclick",
-      `setDetail(${rearmostTodoIndex})`
+      `deleteTodo(${rearmostTodoIndex})`
     );
     rearmostTodo.childNodes[3].setAttribute(
       "onclick",
-      `deleteTodo(${rearmostTodoIndex})`
+      `setDetail(${rearmostTodoIndex})`
     );
   }
 });
 
 //追加されるtodo名(todos.name)が空文字列ではないことのチェックをする関数
-function validate(tood_name) {
+function validate(tood_name_1, tood_name_2) {
   //モーダルからtodo名を更新する場合
   if (modal) {
-    tood_name = document.getElementById("title").value;
+    tood_name_1 = document.getElementById("title").value;
     var btn_done = document.querySelector(".close").classList;
     btn_done.remove("unchangeble", "changeble");
-    tood_name === "" ? btn_done.add("unchangeble") : btn_done.add("changeble");
+    tood_name_1 === ""
+      ? btn_done.add("unchangeble")
+      : btn_done.add("changeble");
+  } else if (tood_name_1.classList.contains("name")) {
+    tood_name_1 = tood_name_1.value;
+    var btn = tood_name_2.parentElement.childNodes;
+    btn[1].style.display = "inline-block";
   } else {
-    tood_name = tood_name.value;
+    tood_name_1 = tood_name_1.value;
   }
-  tood_name === "" ? (changeble = false) : (changeble = true);
+  tood_name_1 === "" ? (changeble = false) : (changeble = true);
 }
 
 //UPDATEボタン、又は、モダールのDONEボタンを押した時に実行されるtodoの更新を担う関数
@@ -92,14 +99,19 @@ function updateTodo(todoId) {
     } else {
       renewedTodo = document.getElementById(todoId).childNodes[0].value;
       todos.name[todoId] = renewedTodo;
+
+      var btn = document.getElementById(todoId).childNodes;
+      btn[1].style.display = "none";
     }
   }
 }
 
 //todoを更新した際にUPDATボタンを押し忘れたり、空文字で更新しようとしたら、更新直前のtodoが表示される
 window.addEventListener("click", function() {
+  var list = document.querySelectorAll(".todo-item");
   for (var i = 0; i < todos.memo.length; i++) {
     document.getElementById(i).childNodes[0].value = todos.name[i];
+    list[i].childNodes[1].style.display = "none";
   }
 });
 
@@ -139,11 +151,11 @@ function deleteTodo(todoId) {
     );
     updatedList.childNodes[2].setAttribute(
       "onclick",
-      `setDetail(${updatedId})`
+      `deleteTodo(${updatedId})`
     );
     updatedList.childNodes[3].setAttribute(
       "onclick",
-      `deleteTodo(${updatedId})`
+      `setDetail(${updatedId})`
     );
   }
   //DOMから削除する
