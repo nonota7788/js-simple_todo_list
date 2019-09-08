@@ -23,14 +23,13 @@ document.querySelector(".btn-add").addEventListener("click", function() {
     var input = document.createElement("input");
     li.appendChild(input);
     input.classList.add("name");
-    var btn_delete = document.createElement("ion-icon");
     var btn_update = document.createElement("button");
+    var btn_delete = document.createElement("ion-icon");
     var btn_detail = document.createElement("ion-icon");
     li.appendChild(btn_update);
     li.appendChild(btn_delete);
     li.appendChild(btn_detail);
     btn_update.classList.add("btn", "btn-update");
-
     btn_delete.setAttribute("name", "trash");
     btn_detail.setAttribute("name", "clipboard");
     btn_delete.classList.add("btn-delete");
@@ -65,9 +64,9 @@ document.querySelector(".btn-add").addEventListener("click", function() {
   }
 });
 
-//追加されるtodo名(todos.name)が空文字列ではないことのチェックをする関数
+//新規追加や更新されるtodo名(todos.name)が空文字列ではないことのチェックをする関数
 function validate(tood_name_1, tood_name_2) {
-  //モーダルからtodo名を更新する場合
+  //モーダルから更新する場合
   if (modal) {
     tood_name_1 = document.getElementById("title").value;
     var btn_done = document.querySelector(".close").classList;
@@ -75,11 +74,13 @@ function validate(tood_name_1, tood_name_2) {
     tood_name_1 === ""
       ? btn_done.add("unchangeble")
       : btn_done.add("changeble");
-  } else if (tood_name_1.classList.contains("name")) {
+  } //todoの一覧から更新する場合
+  else if (tood_name_1.classList.contains("name")) {
     tood_name_1 = tood_name_1.value;
     var btn = tood_name_2.parentElement.childNodes;
     btn[1].style.display = "inline-block";
-  } else {
+  } //新規追加する場合
+  else {
     tood_name_1 = tood_name_1.value;
   }
   tood_name_1 === "" ? (changeble = false) : (changeble = true);
@@ -94,7 +95,7 @@ function updateTodo(todoId) {
       renewedTodo = document.getElementById("title").value;
       document.getElementById(todoId).childNodes[0].value = renewedTodo;
       todos.name[todoId] = renewedTodo;
-      document.getElementById("myModal").style.display = "none";
+      document.getElementById("modal").style.display = "none";
       modal = false;
     } else {
       renewedTodo = document.getElementById(todoId).childNodes[0].value;
@@ -119,7 +120,7 @@ window.addEventListener("click", function() {
 function setDetail(todoId) {
   changeble = true;
   modal = true;
-  document.getElementById("myModal").style.display = "block";
+  document.getElementById("modal").style.display = "block";
   var btn_done = document.querySelector(".close");
   btn_done.setAttribute("onclick", `updateTodo(${todoId})`);
   btn_done.classList.add("changeble");
