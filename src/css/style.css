@@ -31,6 +31,7 @@ button:focus,
 /*--- BUTTON ---*/
 button {
   border: none;
+  background: none;
 }
 
 .btn {
@@ -64,7 +65,7 @@ button {
 .btn-delete,
 .btn-detail {
   position: absolute;
-  font-size: 400%;
+  font-size: 600%;
   vertical-align: middle;
 }
 
