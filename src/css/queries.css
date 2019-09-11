@@ -9,14 +9,6 @@
   }
 
   /*--- BUTTONS ---*/
-  .btn {
-    width: 80px;
-    padding: 13px 0;
-  }
-
-  .btn-update {
-    right: 40px;
-  }
 
   .btn-delete,
   .btn-detail {
@@ -55,15 +47,6 @@
   }
 
   /*--- BUTTONS ---*/
-  .btn {
-    width: 55px;
-    padding: 9px 0;
-  }
-
-  .btn-update {
-    top: 200px;
-    right: 40px;
-  }
 
   .btn-delete,
   .btn-detail {
@@ -99,15 +82,10 @@
   }
 
   /*--- BUTTONS ---*/
-  .btn {
-    padding: 5px 0;
-  }
-
   .btn-update {
-    top: 170px;
-    right: 15px;
+    left: 40%;
+    top: 20px;
   }
-
   .btn-delete,
   .btn-detail {
     font-size: 330%;

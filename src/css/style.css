@@ -36,11 +36,25 @@ button {
 
 .btn {
   color: #fff;
-  height: auto;
-  width: 100px;
   border-radius: 5px;
-  padding: 20px 0;
-  margin-bottom: 7px;
+  padding: 10px 15px;
+}
+
+.btn-update {
+  background-color: #16a085;
+  -webkit-transition: background-color 0.3s;
+  transition: background-color 0.3s;
+  position: relative;
+  left: 0;
+  top: 40px;
+}
+
+.on_btn {
+  display: inline-block;
+}
+
+.off_btn {
+  display: none;
 }
 
 .btn-add {
@@ -48,18 +62,6 @@ button {
   font-size: 400%;
   vertical-align: middle;
   padding-bottom: 13px;
-}
-
-.btn-update {
-  display: block;
-  background-color: #16a085;
-  margin-right: 5px;
-  -webkit-transition: background-color 0.3s;
-  transition: background-color 0.3s;
-  position: fixed;
-  top: 210px;
-  right: 30px;
-  z-index: 9999;
 }
 
 .btn-delete,
@@ -111,9 +113,10 @@ button {
 
 /*--- ADD_TODO_BOX ---*/
 .add_todo_box {
+  width: 90%;
+  margin: 0 5% 70px 5%;
   padding-bottom: 60px;
   border-bottom: 1px solid rgb(225, 225, 225);
-  margin-bottom: 70px;
 }
 
 #added-todo {
