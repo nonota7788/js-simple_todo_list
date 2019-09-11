@@ -8,22 +8,6 @@
     font-size: 18px;
   }
 
-  /*--- BUTTONS ---*/
-
-  .btn-delete,
-  .btn-detail {
-    font-size: 500%;
-  }
-
-  .btn-delete {
-    top: -3px;
-    right: 110px;
-  }
-
-  .btn-detail {
-    top: -6px;
-  }
-
   /*--- ADD_TODO_BOX ---*/
   #added-todo {
     width: 350px;
@@ -38,23 +22,26 @@
   .todo-item input {
     font-size: 250%;
   }
+
+  .btn-delete,
+  .btn-detail {
+    font-size: 500%;
+  }
+
+  .btn-delete {
+    top: -3px;
+    right: 110px;
+  }
+
+  .btn-detail {
+    top: -6px;
+  }
 }
 
 /* Small phones to small tablets: from 481px to 767px */
 @media only screen and (max-width: 767px) {
   html {
     font-size: 16px;
-  }
-
-  /*--- BUTTONS ---*/
-
-  .btn-delete,
-  .btn-detail {
-    font-size: 420%;
-  }
-
-  .btn-delete {
-    right: 80px;
   }
 
   /*--- ADD_TODO_BOX ---*/
@@ -73,6 +60,15 @@
   .todo-item input {
     font-size: 200%;
   }
+
+  .btn-delete,
+  .btn-detail {
+    font-size: 420%;
+  }
+
+  .btn-delete {
+    right: 80px;
+  }
 }
 
 /* Small phones: from 0 to 480px */
@@ -81,11 +77,23 @@
     font-size: 14px;
   }
 
-  /*--- BUTTONS ---*/
-  .btn-update {
-    left: 40%;
-    top: 20px;
+  /*--- ADD_TODO_BOX ---*/
+  .add_todo_box {
+    margin-bottom: 50px;
   }
+
+  #added-todo {
+    width: 220px;
+    height: 35px;
+  }
+
+  .btn-add {
+    font-size: 300%;
+    padding-bottom: 7px;
+  }
+
+  /*--- TODOS_BOX ---*/
+
   .btn-delete,
   .btn-detail {
     font-size: 330%;
@@ -99,21 +107,5 @@
 
   .btn-detail {
     right: 10px;
-  }
-
-  /*--- ADD_TODO_BOX ---*/
-  .add_todo_box {
-    padding-bottom: 40px;
-    margin-bottom: 50px;
-  }
-
-  #added-todo {
-    width: 220px;
-    height: 35px;
-  }
-
-  .btn-add {
-    font-size: 300%;
-    padding-bottom: 7px;
   }
 }

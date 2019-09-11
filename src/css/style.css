@@ -18,76 +18,16 @@ html {
   background-color: rgb(254, 254, 255);
 }
 
-input:focus,
-textarea:focus,
-button:focus,
-.btn:focus {
-  outline: none;
-}
-
-/*-------------------------------*/
-/* RESUABLE COMPONENTS */
-/*-------------------------------*/
-/*--- BUTTON ---*/
 button {
   border: none;
   background: none;
 }
 
-.btn {
-  color: #fff;
-  border-radius: 5px;
-  padding: 10px 15px;
-}
-
-.btn-update {
-  background-color: #16a085;
-  -webkit-transition: background-color 0.3s;
-  transition: background-color 0.3s;
-  position: relative;
-  left: 0;
-  top: 40px;
-}
-
-.on_btn {
-  display: inline-block;
-}
-
-.off_btn {
-  display: none;
-}
-
-.btn-add {
-  color: #3498db;
-  font-size: 400%;
-  vertical-align: middle;
-  padding-bottom: 13px;
-}
-
-.btn-delete,
-.btn-detail {
-  position: absolute;
-  font-size: 600%;
-  vertical-align: middle;
-}
-
-.btn-delete {
-  color: #e95a4b;
-  top: -9px;
-  right: 140px;
-}
-
-.btn-detail {
-  color: #bdc3c7;
-  top: -11px;
-  right: 20px;
-}
-
-.btn-update:hover,
-.btn-update:active {
-  background-color: #12826c;
-  -webkit-box-shadow: 0 0 3px rgb(214, 214, 214);
-  box-shadow: 0 0 3px rgb(214, 214, 214);
+input:focus,
+textarea:focus,
+button:focus,
+.btn:focus {
+  outline: none;
 }
 
 /*-------------------------------*/
@@ -115,20 +55,59 @@ button {
 .add_todo_box {
   width: 90%;
   margin: 0 5% 70px 5%;
-  padding-bottom: 60px;
+  padding-bottom: 5px;
   border-bottom: 1px solid rgb(225, 225, 225);
 }
 
 #added-todo {
   width: 400px;
   height: 50px;
-  margin-right: 20px;
+  margin: 0 20px 10px 0;
   padding: 5px;
   border-radius: 5px;
   border: 1px solid rgb(225, 225, 225);
   background-color: rgb(254, 254, 255);
   font-size: 100%;
   font-weight: 100;
+}
+
+.btn-add {
+  color: #3498db;
+  font-size: 400%;
+  vertical-align: middle;
+  padding-bottom: 13px;
+}
+
+.btn_update_box {
+  height: 33px;
+  text-align: right;
+}
+
+.btn {
+  color: #fff;
+  border-radius: 5px;
+  padding: 10px 15px;
+}
+
+.btn-update {
+  background-color: #16a085;
+  -webkit-transition: background-color 0.3s;
+  transition: background-color 0.3s;
+}
+
+.btn-update:hover,
+.btn-update:active {
+  background-color: #12826c;
+  -webkit-box-shadow: 0 0 3px rgb(214, 214, 214);
+  box-shadow: 0 0 3px rgb(214, 214, 214);
+}
+
+.on_btn {
+  display: inline-block;
+}
+
+.off_btn {
+  display: none;
 }
 
 /*---TODOS_BOX ---*/
@@ -150,10 +129,29 @@ button {
   padding: 0 10px;
   width: 70%;
   border: none;
-  border-radius: 0%;
   font-size: 300%;
   font-weight: 100;
   background-color: rgb(254, 254, 255);
+}
+
+/*--- BUTTON ---*/
+.btn-delete,
+.btn-detail {
+  position: absolute;
+  font-size: 600%;
+  vertical-align: middle;
+}
+
+.btn-delete {
+  color: #e95a4b;
+  top: -9px;
+  right: 140px;
+}
+
+.btn-detail {
+  color: #bdc3c7;
+  top: -11px;
+  right: 20px;
 }
 
 /*-------------------------------*/
