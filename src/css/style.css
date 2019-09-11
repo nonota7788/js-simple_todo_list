@@ -36,10 +36,10 @@ button {
 
 .btn {
   color: #fff;
-  height: 50px;
+  height: auto;
   width: 100px;
   border-radius: 5px;
-  padding: 5px 0;
+  padding: 20px 0;
   margin-bottom: 7px;
 }
 

@@ -1,0 +1,141 @@
+/* Big tablets to 1200px : width smaller than 1200px row */
+@media only screen and (max-width: 1200px) {
+}
+
+/* Small tablets to big tablets: from 768px to 1023px */
+@media only screen and (max-width: 1023px) {
+  html {
+    font-size: 18px;
+  }
+
+  /*--- BUTTONS ---*/
+  .btn {
+    width: 80px;
+    padding: 13px 0;
+  }
+
+  .btn-update {
+    right: 40px;
+  }
+
+  .btn-delete,
+  .btn-detail {
+    font-size: 500%;
+  }
+
+  .btn-delete {
+    top: -3px;
+    right: 110px;
+  }
+
+  .btn-detail {
+    top: -6px;
+  }
+
+  /*--- ADD_TODO_BOX ---*/
+  #added-todo {
+    width: 350px;
+    height: 45px;
+  }
+
+  .btn-add {
+    padding-bottom: 11px;
+  }
+
+  /*--- TODOS_BOX ---*/
+  .todo-item input {
+    font-size: 250%;
+  }
+}
+
+/* Small phones to small tablets: from 481px to 767px */
+@media only screen and (max-width: 767px) {
+  html {
+    font-size: 16px;
+  }
+
+  /*--- BUTTONS ---*/
+  .btn {
+    width: 55px;
+    padding: 9px 0;
+  }
+
+  .btn-update {
+    top: 200px;
+    right: 40px;
+  }
+
+  .btn-delete,
+  .btn-detail {
+    font-size: 420%;
+  }
+
+  .btn-delete {
+    right: 80px;
+  }
+
+  /*--- ADD_TODO_BOX ---*/
+  #added-todo {
+    width: 300px;
+    height: 40px;
+    margin-right: 10px;
+  }
+
+  .btn-add {
+    font-size: 350%;
+    padding-bottom: 9px;
+  }
+
+  /*--- TODOS_BOX ---*/
+  .todo-item input {
+    font-size: 200%;
+  }
+}
+
+/* Small phones: from 0 to 480px */
+@media only screen and (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+
+  /*--- BUTTONS ---*/
+  .btn {
+    padding: 5px 0;
+  }
+
+  .btn-update {
+    top: 170px;
+    right: 15px;
+  }
+
+  .btn-delete,
+  .btn-detail {
+    font-size: 330%;
+    top: -2px;
+  }
+
+  .btn-delete {
+    right: 50px;
+    top: -1px;
+  }
+
+  .btn-detail {
+    right: 10px;
+  }
+
+  /*--- ADD_TODO_BOX ---*/
+  .add_todo_box {
+    padding-bottom: 40px;
+    margin-bottom: 50px;
+  }
+
+  #added-todo {
+    width: 220px;
+    height: 35px;
+  }
+
+  .btn-add {
+    font-size: 300%;
+    padding-bottom: 7px;
+  }
+}
