@@ -99,9 +99,7 @@ function updateTodo(todoId) {
       renewedTodo = document.getElementById("title").value;
       document.getElementById(todoId).childNodes[0].value = renewedTodo;
       todos.name[todoId] = renewedTodo;
-
       handleModal();
-      //modal = false;
     } else {
       renewedTodo = document.getElementById(todoId).childNodes[0].value;
       todos.name[todoId] = renewedTodo;

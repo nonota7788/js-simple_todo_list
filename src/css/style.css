@@ -21,6 +21,7 @@ html {
 button {
   border: none;
   background: none;
+  cursor: pointer;
 }
 
 input:focus,
@@ -134,7 +135,6 @@ button:focus,
   background-color: rgb(254, 254, 255);
 }
 
-/*--- BUTTON ---*/
 .btn-delete,
 .btn-detail {
   position: absolute;
@@ -166,8 +166,6 @@ button:focus,
   transform: translate(-50%);
   min-height: 100vh;
   background-color: rgb(245, 245, 245);
-  border-radius: 5px;
-  box-shadow: 0 0 5px rgb(211, 211, 211);
 }
 
 .on_modal {
