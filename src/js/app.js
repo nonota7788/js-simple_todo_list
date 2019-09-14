@@ -1,9 +1,9 @@
-var todos, modal, changeble;
+var todos, isModal, changeble;
 
 //todoを管理するための配列
 todos = { name: [], memo: [] };
 //最初、モーダルは閉じているからfalseが入る
-modal = false;
+isModal = false;
 var btn_update = document.querySelector(".btn-update");
 btn_update.classList.add("off_btn");
 
@@ -69,7 +69,7 @@ document.querySelector(".btn-add").addEventListener("click", function() {
 //新規追加や更新されるtodo名(todos.name)が空文字列ではないことのチェックをする関数
 function validate(changedTodo) {
   //モーダルから更新する場合
-  if (modal) {
+  if (isModal) {
     changedTodo = document.getElementById("title").value;
     var btn_done = document.querySelector(".close").classList;
     btn_done.remove("unchangeble", "changeble");
@@ -95,12 +95,13 @@ function updateTodo(todoId) {
   if (changeble) {
     var renewedTodo;
     //モーダルからの更新か、それともリストからの更新かで条件分岐
-    if (modal) {
+    if (isModal) {
       renewedTodo = document.getElementById("title").value;
       document.getElementById(todoId).childNodes[0].value = renewedTodo;
       todos.name[todoId] = renewedTodo;
-      document.getElementById("modal").style.display = "none";
-      modal = false;
+
+      handleModal();
+      //modal = false;
     } else {
       renewedTodo = document.getElementById(todoId).childNodes[0].value;
       todos.name[todoId] = renewedTodo;
@@ -122,8 +123,7 @@ window.addEventListener("click", function() {
 //個々のtodoの詳細を設定できるモーダルの表示
 function setDetail(todoId) {
   changeble = true;
-  modal = true;
-  document.getElementById("modal").style.display = "block";
+  handleModal();
   var btn_done = document.querySelector(".close");
   btn_done.setAttribute("onclick", `updateTodo(${todoId})`);
   btn_done.classList.add("changeble");
@@ -165,6 +165,20 @@ function deleteTodo(todoId) {
   //配列todosから削除する
   todos.name.splice(todoId, 1);
   todos.memo.splice(todoId, 1);
+}
+
+//モーダルの表示・非表示を行う関数
+function handleModal() {
+  var modal = document.getElementById("modal").classList;
+  if (modal.contains("off_modal")) {
+    isModal = true;
+    modal.remove("off_modal");
+    modal.add("on_modal");
+  } else {
+    isModal = false;
+    modal.remove("on_modal");
+    modal.add("off_modal");
+  }
 }
 
 //todoに関連したメモを追加する関数

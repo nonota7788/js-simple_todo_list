@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./src/css/style.css" />
     <link rel="stylesheet" href="./src/css/queries.css" />
     <link
@@ -27,7 +28,9 @@
           <ion-icon name="add-circle-outline" class="btn-add"></ion-icon>
         </button>
         <div class="btn_update_box">
-          <button type="button" class="btn btn-update">Update</button>
+          <button type="button" class="btn btn-update" id="btn_update">
+            Update
+          </button>
         </div>
       </div>
 
@@ -36,7 +39,7 @@
       </div>
 
       <!--modal-->
-      <div id="modal">
+      <div class="off_modal" id="modal">
         <div class="modal-header">
           <div>Details</div>
           <span class="close">Done</span>

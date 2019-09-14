@@ -158,7 +158,6 @@ button:focus,
 /* MODAL */
 /*-------------------------------*/
 #modal {
-  display: none;
   position: fixed;
   top: 0;
   left: 50%;
@@ -169,6 +168,14 @@ button:focus,
   background-color: rgb(245, 245, 245);
   border-radius: 5px;
   box-shadow: 0 0 5px rgb(211, 211, 211);
+}
+
+.on_modal {
+  display: block;
+}
+
+.off_modal {
+  display: none;
 }
 
 .modal-header {
