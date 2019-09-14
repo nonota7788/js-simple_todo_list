@@ -1,18 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./src/css/style.css" />
+    <link rel="stylesheet" href="./src/css/queries.css" />
     <link
       href="https://fonts.googleapis.com/css?family=Lato:100,300,300i,400&display=swap"
       rel="stylesheet"
     />
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule=""
+      src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.js"
+    ></script>
 
     <title>Simple TODO</title>
   </head>
   <body>
-    <div class="todo-row">
+    <div class="todo-wrapper">
+      <div class="title">Simple TODO</div>
+      <div class="add_todo_box">
+        <input type="text" placeholder="Add your todo" id="added-todo" />
+        <button type="button">
+          <ion-icon name="add-circle-outline" class="btn-add"></ion-icon>
+        </button>
+        <div class="btn_update_box">
+          <button type="button" class="btn btn-update" id="btn_update">
+            Update
+          </button>
+        </div>
+      </div>
+
+      <div class="todos_box">
+        <ul></ul>
+      </div>
+
       <!--modal-->
-      <div id="myModal" class="modal">
+      <div class="off_modal" id="modal">
         <div class="modal-header">
           <div>Details</div>
           <span class="close">Done</span>
@@ -21,27 +48,14 @@
           <input type="text" id="title" />
         </div>
         <div class="detail">
-          <div id="reminder">reminder</div>
+          <div id="reminder">Reminder : coming soon ...</div>
         </div>
         <div class="detail">
-          <textarea placeholder="memo" id="memo"></textarea>
+          <textarea placeholder="Notes" id="memo"></textarea>
         </div>
       </div>
-
-      <!--todoList-->
-      <div class="title">Simple TODO</div>
-      <input
-        type="text"
-        placeholder="Add your todo"
-        class="input"
-        id="added-todo"
-      />
-      <button type="button" class="btn btn-add" id="btn-add">
-        Add
-      </button>
-      <ol class="todo-box"></ol>
+      <!--modal-->
     </div>
-
     <script src="./src/js/app.js"></script>
   </body>
 </html>
