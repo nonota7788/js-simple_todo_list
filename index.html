@@ -20,42 +20,93 @@
     <title>Simple TODO</title>
   </head>
   <body>
-    <div class="todo-wrapper">
-      <div class="title">Simple TODO</div>
-      <div class="add_todo_box">
-        <input type="text" placeholder="Add your todo" id="added-todo" />
-        <button type="button">
-          <ion-icon name="add-circle-outline" class="btn-add"></ion-icon>
-        </button>
-        <div class="btn_update_box">
-          <button type="button" class="btn btn-update" id="btn_update">
-            Update
-          </button>
-        </div>
+    
+    <div class="top">
+      <div class="overview">
+        <div class="overview__title">Your Todos on <span class="overview__title--date">%DATE%</span></div>
+        <div class="overview__total">Total &#58; <span class="overview__total--value">3</span></div>
+        <div class="overview__comp">Complete &#58; <span class="overview__comp--value">1</span></div>
+        <div class="overview__uncomp">Uncomplete &#58; <span class="overview__uncom--value">2</span></div>
       </div>
-
-      <div class="todos_box">
-        <ul></ul>
-      </div>
-
-      <!--modal-->
-      <div class="off_modal" id="modal">
-        <div class="modal-header">
-          <div>Details</div>
-          <span class="close">Done</span>
-        </div>
-        <div class="detail">
-          <input type="text" id="title" />
-        </div>
-        <div class="detail">
-          <div id="reminder">Reminder : coming soon ...</div>
-        </div>
-        <div class="detail">
-          <textarea placeholder="Notes" id="memo"></textarea>
-        </div>
-      </div>
-      <!--modal-->
     </div>
-    <script src="./src/js/app.js"></script>
+
+    <div class="bottom">
+      <div class="btn">
+        <button type="button" class="btn__done">done</button>
+      </div>
+
+      <div class="todos">
+        <ul class="todos__list">
+
+          <li class="item" id="0">
+            <div class="item__done">
+              <button type="button" class="item__done--btn"></button>
+            </div>
+            <div class="item__container">
+                <input type="text" class="item__description" value="shopping">
+                <div class="item__delete">
+                    <button type="button" class="item__delete--btn"><ion-icon name="close-circle-outline" class="item--delete--icon"></ion-icon></button>
+                </div>
+            </div>
+          </li>
+            
+            <li class="item" id="1">
+                <div class="item__done">
+                  <button type="button" class="item__done--btn"></button>
+                </div>
+                <div class="item__container">
+                    <input type="text" class="item__description" value="shopping">
+                    <div class="item__delete">
+                        <button type="button" class="item__delete--btn"><ion-icon name="close-circle-outline" class="item--delete--icon"></ion-icon></button>
+                    </div>
+                </div>
+              </li>
+          
+                <li class="item" id="2">
+                    <div class="item__done">
+                      <button type="button" class="item__done--btn"></button>
+                    </div>
+                    <div class="item__container">
+                        <input type="text" class="item__description" value="shopping">
+                        <div class="item__delete">
+                            <button type="button" class="item__delete--btn"><ion-icon name="close-circle-outline" class="item--delete--icon"></ion-icon></button>
+                        </div>
+                    </div>
+                  </li>
+                  
+                    <li class="item" id="3">
+                        <div class="item__add">
+                          <ion-icon name="add"></ion-icon>
+                        </div>
+                        <div class="item__container">
+                            <input type="text" class="item__description">
+                        </div>
+                    </li>
+
+
+          
+                    <li class="item" id="4">
+                        
+                    </li>
+
+                    <li class="item" id="5">
+                           
+                    </li>
+
+          
+                
+          
+        </ul>
+      </div>
+
+    </div>
+    
+      
+      
+    </div>
+    <!--
+      <script src="./src/js/app.js"></script>
+    -->
+    
   </body>
 </html>
