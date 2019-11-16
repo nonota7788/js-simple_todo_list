@@ -9,6 +9,10 @@ const app = (() => {
       this.description = description;
     };
 
+    Todos.prototype.getUncompTodo = function() {
+      if (this.done === "uncomp") return this;
+    };
+
     const data = {
       todoItems: [],
       overview: {
@@ -19,7 +23,7 @@ const app = (() => {
     };
 
     return {
-      addTodoItem: description => {
+      addTodoItem: function(description) {
         //1: create unique id
         let ID;
         if (data.todoItems.length === 0) {
@@ -37,11 +41,34 @@ const app = (() => {
         return newItem;
       },
 
-      calculateTodoItem: () => {
+      getTodosTotal: function() {
         return data.todoItems.length;
       },
 
-      testData: () => {
+      calculateOverview: function() {
+        // 1: Calaculate todos'total number
+        data.overview.total = this.getTodosTotal();
+
+        // 2: Calaculate todos'uncomp number
+        const uncomp = data.todoItems.map(cur => {
+          return cur.getUncompTodo();
+        });
+
+        data.overview.uncomp = uncomp.length;
+
+        // 3: Calaculate todos'comp number (comp = total - uncomp)
+        data.overview.comp = data.overview.total - data.overview.uncomp;
+      },
+
+      getOverview: function() {
+        return {
+          total: data.overview.total,
+          uncomp: data.overview.uncomp,
+          comp: data.overview.comp
+        };
+      },
+
+      testData: function() {
         console.log(data);
       }
     };
@@ -57,7 +84,10 @@ const app = (() => {
       todosContainer: ".todos__list",
       nextItem: ".next",
       todoItem: "item", // Because of using this in getElemetByClassName() argument, there is no '.' before text.
-      blankItem: ".blank"
+      blankItem: ".blank",
+      totalLabel: ".overview__total--value",
+      compLabel: ".overview__comp--value",
+      uncompLabel: ".overview__uncomp--value"
     };
 
     const createNextList = () => {
@@ -72,11 +102,11 @@ const app = (() => {
     };
 
     return {
-      getInput: () => {
+      getInput: function() {
         return document.querySelector(DOMstrings.nextItemDesc).value;
       },
 
-      displayTodoItem: (item, num) => {
+      displayTodoItem: function(item, num) {
         //1: Create html
         const html = `<li class="item" id=${item.id}> <div class="item__done"><button type="button" class="item__done--btn ${item.done}"></button></div>
                       <div class="item__container"><input type="text" class="item__description" value=${item.description} /><div class="item__delete">
@@ -97,7 +127,7 @@ const app = (() => {
         }
       },
 
-      displayList: () => {
+      displayList: function() {
         const target = document.querySelector(DOMstrings.todosContainer);
         target.insertAdjacentHTML("beforeend", createNextList());
         for (let i = 0; i < 4; i++) {
@@ -105,9 +135,16 @@ const app = (() => {
         }
       },
 
-      updateList: () => {},
+      displayOverview: function(overview) {
+        document.querySelector(DOMstrings.totalLabel).textContent =
+          overview.total;
+        document.querySelector(DOMstrings.compLabel).textContent =
+          overview.comp;
+        document.querySelector(DOMstrings.uncompLabel).textContent =
+          overview.uncomp;
+      },
 
-      getDOMstrings: () => {
+      getDOMstrings: function() {
         return DOMstrings;
       }
     };
@@ -128,6 +165,17 @@ const app = (() => {
       });
     };
 
+    const updateOverview = () => {
+      // 1: calculate overview (total, uncomp, comp)
+      todosCtrl.calculateOverview();
+
+      // 2: Get overview
+      const overview = todosCtrl.getOverview();
+
+      // 3: update todos's overview
+      UICtrl.displayOverview(overview);
+    };
+
     const ctrlAddTodo = event => {
       // 1: get input value from the UI
       const input = UICtrl.getInput();
@@ -137,19 +185,24 @@ const app = (() => {
         const todoItem = todosCtrl.addTodoItem(input);
 
         // 3: Calculate number of todo items
-        const todoNum = todosCtrl.calculateTodoItem();
+        const todoNum = todosCtrl.getTodosTotal();
 
         // 4: display todo item using input value
         UICtrl.displayTodoItem(todoItem, todoNum);
 
-        // 5: calculate todos's overview
-        // 6: update todos's overview
+        // 5: Calculate and update todo's overview
+        updateOverview();
       }
     };
 
     return {
       init: () => {
         console.log("Appliction has started!!");
+        UICtrl.displayOverview({
+          total: 0,
+          comp: 0,
+          uncomp: 0
+        });
         UICtrl.displayList();
         setupEventListener();
       }
