@@ -9,10 +9,6 @@ const app = (() => {
       this.description = description;
     };
 
-    Todos.prototype.getUncompTodo = function() {
-      if (this.done === "uncomp") return this;
-    };
-
     const data = {
       todoItems: [],
       overview: {
@@ -36,22 +32,23 @@ const app = (() => {
 
         //3: insert Todo instace into data structure
         data.todoItems.push(newItem);
-
-        //4: retrun Todo instance
-        return newItem;
       },
 
-      getTodosTotal: function() {
+      getTodoItem: function() {
+        return data.todoItems[data.todoItems.length - 1];
+      },
+
+      getTotalNum: function() {
         return data.todoItems.length;
       },
 
       calculateOverview: function() {
         // 1: Calaculate todos'total number
-        data.overview.total = this.getTodosTotal();
+        data.overview.total = this.getTotalNum();
 
         // 2: Calaculate todos'uncomp number
         const uncomp = data.todoItems.map(cur => {
-          return cur.getUncompTodo();
+          if (cur.done === "uncomp") return cur;
         });
 
         data.overview.uncomp = uncomp.length;
@@ -106,14 +103,14 @@ const app = (() => {
         return document.querySelector(DOMstrings.nextItemDesc).value;
       },
 
-      displayTodoItem: function(item, num) {
+      displayTodoItem: function(obj, num) {
         //1: Create html
-        const html = `<li class="item" id=${item.id}> <div class="item__done"><button type="button" class="item__done--btn ${item.done}"></button></div>
-                      <div class="item__container"><input type="text" class="item__description" value=${item.description} /><div class="item__delete">
+        const html = `<li class="item" id=${obj.id}> <div class="item__done"><button type="button" class="item__done--btn ${obj.done}"></button></div>
+                      <div class="item__container"><input type="text" class="item__description" value=${obj.description} /><div class="item__delete">
                       <button type="button" class="item__delete--btn"><ion-icon name="close-circle-outline" class="item--delete--icon"></ion-icon>
                       </button></div></div></li>`;
 
-        //2: Insert html(new todo item)
+        //2: Insert html(newly created todo item) right before 'next'
         const target = document.querySelector(DOMstrings.nextItem);
         target.insertAdjacentHTML("beforebegin", html);
 
@@ -123,7 +120,9 @@ const app = (() => {
         //5: Remove one 'blank' list from UI
         if (num < 5) {
           const deleteTarget = document.querySelector(DOMstrings.blankItem);
-          target.parentNode.removeChild(deleteTarget);
+          document
+            .querySelector(DOMstrings.todosContainer)
+            .removeChild(deleteTarget);
         }
       },
 
@@ -154,19 +153,19 @@ const app = (() => {
   /* CONTROLLER MODULE */
   /*--------------------------------*/
   const AppController = ((todosCtrl, UICtrl) => {
-    const setupEventListener = () => {
+    const setUpEventListener = () => {
       const DOM = UICtrl.getDOMstrings();
       document.querySelector(DOM.addBtn).addEventListener("click", ctrlAddTodo);
       document.addEventListener("keydown", event => {
         if (event.key === "Enter") {
           event.preventDefault();
-          ctrlAddTodo(event);
+          ctrlAddTodo();
         }
       });
     };
 
     const updateOverview = () => {
-      // 1: calculate overview (total, uncomp, comp)
+      // 1: Calculate overview (total, uncomp, comp)
       todosCtrl.calculateOverview();
 
       // 2: Get overview
@@ -176,21 +175,24 @@ const app = (() => {
       UICtrl.displayOverview(overview);
     };
 
-    const ctrlAddTodo = event => {
-      // 1: get input value from the UI
+    const ctrlAddTodo = () => {
+      // 1: Get input value from the UI
       const input = UICtrl.getInput();
 
       if (input) {
-        // 2: add input value to data structure
-        const todoItem = todosCtrl.addTodoItem(input);
+        // 2: Add input value to data structure
+        todosCtrl.addTodoItem(input);
 
-        // 3: Calculate number of todo items
-        const todoNum = todosCtrl.getTodosTotal();
+        // 3: Get newly created todo from data structure
+        const todoItem = todosCtrl.getTodoItem();
 
-        // 4: display todo item using input value
+        // 4: Get number of all todo items
+        const todoNum = todosCtrl.getTotalNum();
+
+        // 5: Display todo item using input value
         UICtrl.displayTodoItem(todoItem, todoNum);
 
-        // 5: Calculate and update todo's overview
+        // 6: Calculate and update todo's overview
         updateOverview();
       }
     };
@@ -204,7 +206,7 @@ const app = (() => {
           uncomp: 0
         });
         UICtrl.displayList();
-        setupEventListener();
+        setUpEventListener();
       }
     };
   })(todosController, UIController);
