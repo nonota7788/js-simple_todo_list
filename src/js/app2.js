@@ -65,6 +65,19 @@ const app = (() => {
         };
       },
 
+      deleteTodoItem: function(id) {
+        // 1: todoオブジェクトからidプロパティのみを取り出し、idのみの配列に変換を生成する
+        const ids = data.todoItems.map(cur => {
+          return cur.id;
+        });
+
+        // 2: idのみの配列から、削除対象のid番号のindexを取得する（削除対象のid番号のindex = 削除したいtodoオブジェクトのindex)
+        const index = ids.indexOf(id);
+
+        // 3: spliceメソッドを使って、該当するtodoオブジェクトを配列（data.allItems）から削除する
+        data.todoItems.splice(index, 1);
+      },
+
       testData: function() {
         console.log(data);
       }
@@ -107,7 +120,7 @@ const app = (() => {
         //1: Create html
         const html = `<li class="item" id=${obj.id}> <div class="item__done"><button type="button" class="item__done--btn ${obj.done}"></button></div>
                       <div class="item__container"><input type="text" class="item__description" value=${obj.description} /><div class="item__delete">
-                      <button type="button" class="item__delete--btn"><ion-icon name="close-circle-outline" class="item--delete--icon"></ion-icon>
+                      <button type="button" class="item__delete--btn"><ion-icon name="close-circle-outline" class="item--delete--icon ${obj.id}"></ion-icon>
                       </button></div></div></li>`;
 
         //2: Insert html(newly created todo item) right before 'next'
@@ -162,6 +175,9 @@ const app = (() => {
           ctrlAddTodo();
         }
       });
+      document
+        .querySelector(DOM.todosContainer)
+        .addEventListener("click", ctrlDeleteTodo);
     };
 
     const updateOverview = () => {
@@ -195,6 +211,17 @@ const app = (() => {
         // 6: Calculate and update todo's overview
         updateOverview();
       }
+    };
+
+    const ctrlDeleteTodo = event => {
+      // 1: Get todo's id
+      const ID = parseInt(event.target.classList.item(1));
+
+      // 2: Delete todo obj from data structure
+      todosCtrl.deleteTodoItem(ID);
+
+      // 3: Delete todo from UI
+      // 4: Update and show overview
     };
 
     return {
