@@ -93,7 +93,7 @@ const app = (() => {
       nextItemDesc: ".next .item__description",
       todosContainer: ".todos__list",
       nextItem: ".next",
-      todoItem: "item", // Because of using this in getElemetByClassName() argument, there is no '.' before text.
+      todoItem: "item", // Because of using this in getElemetByClassName() argument, there is no need to use '.' before text.
       blankItem: ".blank",
       totalLabel: ".overview__total--value",
       compLabel: ".overview__comp--value",
@@ -139,6 +139,7 @@ const app = (() => {
         }
       },
 
+      //displayListが本当に必要なのかは疑問
       displayList: function() {
         const target = document.querySelector(DOMstrings.todosContainer);
         target.insertAdjacentHTML("beforeend", createNextList());
@@ -154,6 +155,18 @@ const app = (() => {
           overview.comp;
         document.querySelector(DOMstrings.uncompLabel).textContent =
           overview.uncomp;
+      },
+
+      deleteTodoItem: function(id, num) {
+        const deleteTarget = document.getElementById(id);
+        const container = document.querySelector(DOMstrings.todosContainer);
+        // 1: Remove todo item from UI
+        container.removeChild(deleteTarget);
+
+        // 2: Create a 'blank' list if the number of todos are less than 4
+        if (num < 4) {
+          container.insertAdjacentHTML("beforeend", createBlankList());
+        }
       },
 
       getDOMstrings: function() {
@@ -217,11 +230,19 @@ const app = (() => {
       // 1: Get todo's id
       const ID = parseInt(event.target.classList.item(1));
 
-      // 2: Delete todo obj from data structure
-      todosCtrl.deleteTodoItem(ID);
+      if (ID || ID === 0) {
+        // 2: Delete todo obj from data structure
+        todosCtrl.deleteTodoItem(ID);
 
-      // 3: Delete todo from UI
-      // 4: Update and show overview
+        // 3: Get the number of all todo items
+        const totalNum = todosCtrl.getTotalNum();
+
+        // 4: Delete todo from UI
+        UICtrl.deleteTodoItem(ID, totalNum);
+
+        // 5: Update and show overview
+        updateOverview();
+      }
     };
 
     return {
