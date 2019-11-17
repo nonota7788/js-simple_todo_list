@@ -9,10 +9,6 @@ const app = (() => {
       this.description = description;
     };
 
-    Todos.prototype.getUncompTodo = function() {
-      if (this.done === "uncomp") return this;
-    };
-
     const data = {
       todoItems: [],
       overview: {
@@ -36,22 +32,23 @@ const app = (() => {
 
         //3: insert Todo instace into data structure
         data.todoItems.push(newItem);
-
-        //4: retrun Todo instance
-        return newItem;
       },
 
-      getTodosTotal: function() {
+      getTodoItem: function() {
+        return data.todoItems[data.todoItems.length - 1];
+      },
+
+      getTotalNum: function() {
         return data.todoItems.length;
       },
 
       calculateOverview: function() {
         // 1: Calaculate todos'total number
-        data.overview.total = this.getTodosTotal();
+        data.overview.total = this.getTotalNum();
 
         // 2: Calaculate todos'uncomp number
         const uncomp = data.todoItems.map(cur => {
-          return cur.getUncompTodo();
+          if (cur.done === "uncomp") return cur;
         });
 
         data.overview.uncomp = uncomp.length;
@@ -66,6 +63,19 @@ const app = (() => {
           uncomp: data.overview.uncomp,
           comp: data.overview.comp
         };
+      },
+
+      deleteTodoItem: function(id) {
+        // 1: todoオブジェクトからidプロパティのみを取り出し、idのみの配列に変換を生成する
+        const ids = data.todoItems.map(cur => {
+          return cur.id;
+        });
+
+        // 2: idのみの配列から、削除対象のid番号のindexを取得する（削除対象のid番号のindex = 削除したいtodoオブジェクトのindex)
+        const index = ids.indexOf(id);
+
+        // 3: spliceメソッドを使って、該当するtodoオブジェクトを配列（data.allItems）から削除する
+        data.todoItems.splice(index, 1);
       },
 
       testData: function() {
@@ -83,7 +93,7 @@ const app = (() => {
       nextItemDesc: ".next .item__description",
       todosContainer: ".todos__list",
       nextItem: ".next",
-      todoItem: "item", // Because of using this in getElemetByClassName() argument, there is no '.' before text.
+      todoItem: "item", // Because of using this in getElemetByClassName() argument, there is no need to use '.' before text.
       blankItem: ".blank",
       totalLabel: ".overview__total--value",
       compLabel: ".overview__comp--value",
@@ -106,14 +116,14 @@ const app = (() => {
         return document.querySelector(DOMstrings.nextItemDesc).value;
       },
 
-      displayTodoItem: function(item, num) {
+      displayTodoItem: function(obj, num) {
         //1: Create html
-        const html = `<li class="item" id=${item.id}> <div class="item__done"><button type="button" class="item__done--btn ${item.done}"></button></div>
-                      <div class="item__container"><input type="text" class="item__description" value=${item.description} /><div class="item__delete">
-                      <button type="button" class="item__delete--btn"><ion-icon name="close-circle-outline" class="item--delete--icon"></ion-icon>
+        const html = `<li class="item" id=${obj.id}> <div class="item__done"><button type="button" class="item__done--btn ${obj.done}"></button></div>
+                      <div class="item__container"><input type="text" class="item__description" value=${obj.description} /><div class="item__delete">
+                      <button type="button" class="item__delete--btn"><ion-icon name="close-circle-outline" class="item--delete--icon ${obj.id}"></ion-icon>
                       </button></div></div></li>`;
 
-        //2: Insert html(new todo item)
+        //2: Insert html(newly created todo item) right before 'next'
         const target = document.querySelector(DOMstrings.nextItem);
         target.insertAdjacentHTML("beforebegin", html);
 
@@ -123,10 +133,13 @@ const app = (() => {
         //5: Remove one 'blank' list from UI
         if (num < 5) {
           const deleteTarget = document.querySelector(DOMstrings.blankItem);
-          target.parentNode.removeChild(deleteTarget);
+          document
+            .querySelector(DOMstrings.todosContainer)
+            .removeChild(deleteTarget);
         }
       },
 
+      //displayListが本当に必要なのかは疑問
       displayList: function() {
         const target = document.querySelector(DOMstrings.todosContainer);
         target.insertAdjacentHTML("beforeend", createNextList());
@@ -144,6 +157,18 @@ const app = (() => {
           overview.uncomp;
       },
 
+      deleteTodoItem: function(id, num) {
+        const deleteTarget = document.getElementById(id);
+        const container = document.querySelector(DOMstrings.todosContainer);
+        // 1: Remove todo item from UI
+        container.removeChild(deleteTarget);
+
+        // 2: Create a 'blank' list if the number of todos are less than 4
+        if (num < 4) {
+          container.insertAdjacentHTML("beforeend", createBlankList());
+        }
+      },
+
       getDOMstrings: function() {
         return DOMstrings;
       }
@@ -154,19 +179,22 @@ const app = (() => {
   /* CONTROLLER MODULE */
   /*--------------------------------*/
   const AppController = ((todosCtrl, UICtrl) => {
-    const setupEventListener = () => {
+    const setUpEventListener = () => {
       const DOM = UICtrl.getDOMstrings();
       document.querySelector(DOM.addBtn).addEventListener("click", ctrlAddTodo);
       document.addEventListener("keydown", event => {
         if (event.key === "Enter") {
           event.preventDefault();
-          ctrlAddTodo(event);
+          ctrlAddTodo();
         }
       });
+      document
+        .querySelector(DOM.todosContainer)
+        .addEventListener("click", ctrlDeleteTodo);
     };
 
     const updateOverview = () => {
-      // 1: calculate overview (total, uncomp, comp)
+      // 1: Calculate overview (total, uncomp, comp)
       todosCtrl.calculateOverview();
 
       // 2: Get overview
@@ -176,21 +204,43 @@ const app = (() => {
       UICtrl.displayOverview(overview);
     };
 
-    const ctrlAddTodo = event => {
-      // 1: get input value from the UI
+    const ctrlAddTodo = () => {
+      // 1: Get input value from the UI
       const input = UICtrl.getInput();
 
       if (input) {
-        // 2: add input value to data structure
-        const todoItem = todosCtrl.addTodoItem(input);
+        // 2: Add input value to data structure
+        todosCtrl.addTodoItem(input);
 
-        // 3: Calculate number of todo items
-        const todoNum = todosCtrl.getTodosTotal();
+        // 3: Get newly created todo from data structure
+        const todoItem = todosCtrl.getTodoItem();
 
-        // 4: display todo item using input value
+        // 4: Get number of all todo items
+        const todoNum = todosCtrl.getTotalNum();
+
+        // 5: Display todo item using input value
         UICtrl.displayTodoItem(todoItem, todoNum);
 
-        // 5: Calculate and update todo's overview
+        // 6: Calculate and update todo's overview
+        updateOverview();
+      }
+    };
+
+    const ctrlDeleteTodo = event => {
+      // 1: Get todo's id
+      const ID = parseInt(event.target.classList.item(1));
+
+      if (ID || ID === 0) {
+        // 2: Delete todo obj from data structure
+        todosCtrl.deleteTodoItem(ID);
+
+        // 3: Get the number of all todo items
+        const totalNum = todosCtrl.getTotalNum();
+
+        // 4: Delete todo from UI
+        UICtrl.deleteTodoItem(ID, totalNum);
+
+        // 5: Update and show overview
         updateOverview();
       }
     };
@@ -204,7 +254,7 @@ const app = (() => {
           uncomp: 0
         });
         UICtrl.displayList();
-        setupEventListener();
+        setUpEventListener();
       }
     };
   })(todosController, UIController);
