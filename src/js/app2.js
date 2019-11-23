@@ -65,14 +65,14 @@ const app = (() => {
         };
       },
 
-      deleteTodoItem: function(id) {
+      deleteTodo: function(todoID) {
         // 1: todoオブジェクトからidプロパティのみを取り出し、idのみの配列に変換を生成する
         const ids = data.todoItems.map(cur => {
           return cur.id;
         });
 
         // 2: idのみの配列から、削除対象のid番号のindexを取得する（削除対象のid番号のindex = 削除したいtodoオブジェクトのindex)
-        const index = ids.indexOf(id);
+        const index = ids.indexOf(todoID);
 
         // 3: spliceメソッドを使って、該当するtodoオブジェクトを配列（data.allItems）から削除する
         data.todoItems.splice(index, 1);
@@ -159,13 +159,14 @@ const app = (() => {
 
       deleteTodoItem: function(id, num) {
         const deleteTarget = document.getElementById(id);
-        const container = document.querySelector(DOMstrings.todosContainer);
+        const parentElem = document.querySelector(DOMstrings.todosContainer);
+
         // 1: Remove todo item from UI
-        container.removeChild(deleteTarget);
+        parentElem.removeChild(deleteTarget);
 
         // 2: Create a 'blank' list if the number of todos are less than 4
         if (num < 4) {
-          container.insertAdjacentHTML("beforeend", createBlankList());
+          parentElem.insertAdjacentHTML("beforeend", createBlankList());
         }
       },
 
@@ -232,7 +233,7 @@ const app = (() => {
 
       if (ID || ID === 0) {
         // 2: Delete todo obj from data structure
-        todosCtrl.deleteTodoItem(ID);
+        todosCtrl.deleteTodo(ID);
 
         // 3: Get the number of all todo items
         const totalNum = todosCtrl.getTotalNum();
