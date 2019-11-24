@@ -15,7 +15,8 @@ const app = (() => {
         total: 0,
         comp: 0,
         uncomp: 0
-      }
+      },
+      UpdatingInput: null
     };
 
     return {
@@ -78,6 +79,8 @@ const app = (() => {
         data.todoItems.splice(index, 1);
       },
 
+      storeUpdatingInput: function() {},
+
       testData: function() {
         console.log(data);
       }
@@ -90,19 +93,20 @@ const app = (() => {
   const UIController = (() => {
     const DOMstrings = {
       addBtn: ".btn__done",
-      nextItemDesc: ".next .item__description",
+      nextItemDesc: ".next__description",
       todosContainer: ".todos__list",
       nextItem: ".next",
       todoItem: "item", // Because of using this in getElemetByClassName() argument, there is no need to use '.' before text.
       blankItem: ".blank",
       totalLabel: ".overview__total--value",
       compLabel: ".overview__comp--value",
-      uncompLabel: ".overview__uncomp--value"
+      uncompLabel: ".overview__uncomp--value",
+      itemDesc: "item__description" // Because of using this in classList.contains() argument, there is no need to use '.' before text.
     };
 
     const createNextList = () => {
-      const html = `<li class="next"><div class="item__add"><ion-icon name="add" class="item__add--icon"></ion-icon>
-                    </div><div class="item__container"><input type="text" class="item__description" /></div></li>`;
+      const html = `<li class="next"><div class="next__add"><ion-icon name="add" class="next__add--icon"></ion-icon>
+                    </div><div class="next__container"><input type="text" class="next__description" /></div></li>`;
       return html;
     };
 
@@ -157,6 +161,10 @@ const app = (() => {
           overview.uncomp;
       },
 
+      getSelectedTodoId: function(event) {
+        return parseInt(event.target.classList.item(1));
+      },
+
       deleteTodoItem: function(id, num) {
         const deleteTarget = document.getElementById(id);
         const parentElem = document.querySelector(DOMstrings.todosContainer);
@@ -169,6 +177,8 @@ const app = (() => {
           parentElem.insertAdjacentHTML("beforeend", createBlankList());
         }
       },
+
+      detectUpdatingInput: function() {},
 
       getDOMstrings: function() {
         return DOMstrings;
@@ -192,6 +202,14 @@ const app = (() => {
       document
         .querySelector(DOM.todosContainer)
         .addEventListener("click", ctrlDeleteTodo);
+
+      document
+        .querySelector(DOM.todosContainer)
+        .addEventListener("input", event => {
+          if (event.target.classList.contains(DOM.itemDesc)) {
+            ctrlDetectInput(event);
+          }
+        });
     };
 
     const updateOverview = () => {
@@ -229,7 +247,7 @@ const app = (() => {
 
     const ctrlDeleteTodo = event => {
       // 1: Get todo's id
-      const ID = parseInt(event.target.classList.item(1));
+      const ID = UICtrl.getSelectedTodoId(event);
 
       if (ID || ID === 0) {
         // 2: Delete todo obj from data structure
@@ -244,6 +262,11 @@ const app = (() => {
         // 5: Update and show overview
         updateOverview();
       }
+    };
+
+    const ctrlDetectInput = event => {
+      // 1: Get a changing input one by one
+      // 2: Add the changing input one by one to the data structure
     };
 
     return {
