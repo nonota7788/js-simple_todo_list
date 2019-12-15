@@ -106,7 +106,7 @@ button {
 }
 
 .item__done,
-.item__add {
+.next__add {
   flex: 0 0 10%;
 
   display: flex;
@@ -114,7 +114,7 @@ button {
 }
 
 .item__done--btn,
-.item__add--btn {
+.next__add--btn {
   width: 30px;
   height: 30px;
   border: 1px solid #ecf0f1;
@@ -126,7 +126,8 @@ button {
   background-color: #e74c3c;
 }
 
-.item__container {
+.item__container,
+.next__container {
   flex: 0 0 90%;
   padding: 5px 10px;
   border-bottom: 1px solid #ecf0f1;
@@ -134,7 +135,8 @@ button {
   display: flex;
 }
 
-.item__description {
+.item__description,
+.next__description {
   flex: 0 0 90%;
   border: none;
   background: none;
@@ -160,7 +162,7 @@ button {
   color: #e74c3c;
 }
 
-.item__add--icon {
+.next__add--icon {
   color: #ecf0f1;
 }
 
