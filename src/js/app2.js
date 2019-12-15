@@ -16,7 +16,10 @@ const app = (() => {
         comp: 0,
         uncomp: 0
       },
-      UpdatingInput: null
+      update: {
+        input: null,
+        id: null
+      }
     };
 
     return {
@@ -35,8 +38,13 @@ const app = (() => {
         data.todoItems.push(newItem);
       },
 
-      getTodoItem: function() {
-        return data.todoItems[data.todoItems.length - 1];
+      getTodoItem: function(i) {
+        // 1:todoの追加 or todoの更新
+        let index;
+        data.update.id ? (index = i) : (index = data.todoItems.length - 1);
+
+        // 2:Return todo item obj
+        return data.todoItems[index];
       },
 
       getTotalNum: function() {
@@ -67,19 +75,43 @@ const app = (() => {
       },
 
       deleteTodo: function(todoID) {
+        // 1: 削除対象のidのindexを取得する
+        const index = this.handleIDs(todoID);
+
+        // 2: spliceメソッドを使って、該当するtodoオブジェクトを配列（data.allItems）から削除する
+        data.todoItems.splice(index, 1);
+      },
+
+      handleIDs: function(ID) {
         // 1: todoオブジェクトからidプロパティのみを取り出し、idのみの配列に変換を生成する
         const ids = data.todoItems.map(cur => {
           return cur.id;
         });
 
-        // 2: idのみの配列から、削除対象のid番号のindexを取得する（削除対象のid番号のindex = 削除したいtodoオブジェクトのindex)
-        const index = ids.indexOf(todoID);
+        // 2: idのみの配列から、対象のid番号のindexを取得する（対象のid番号のindex = 取得したいtodoオブジェクトのindex)
+        const index = ids.indexOf(ID);
 
-        // 3: spliceメソッドを使って、該当するtodoオブジェクトを配列（data.allItems）から削除する
-        data.todoItems.splice(index, 1);
+        // 3: Return index
+        return index;
       },
 
-      storeUpdatingInput: function() {},
+      storeUpdatingData: function(input, id) {
+        data.update.input = input;
+        data.update.id = id;
+      },
+
+      getUpdatingData: function() {
+        return data.update;
+      },
+
+      resetUpdatingData: function() {
+        data.update.input = null;
+        data.update.id = null;
+      },
+
+      updateItemDesc: function(index, newDesc) {
+        data.todoItems[index].description = newDesc;
+      },
 
       testData: function() {
         console.log(data);
@@ -178,7 +210,9 @@ const app = (() => {
         }
       },
 
-      detectUpdatingInput: function() {},
+      updateValueAttr: function(input, id) {
+        document.getElementById(id).childNodes[3].childNodes[0].value = input;
+      },
 
       getDOMstrings: function() {
         return DOMstrings;
@@ -192,16 +226,29 @@ const app = (() => {
   const AppController = ((todosCtrl, UICtrl) => {
     const setUpEventListener = () => {
       const DOM = UICtrl.getDOMstrings();
-      document.querySelector(DOM.addBtn).addEventListener("click", ctrlAddTodo);
-      document.addEventListener("keydown", event => {
+      document.querySelector(DOM.addBtn).addEventListener("click", () => {
+        todosCtrl.getUpdatingData().input ||
+        todosCtrl.getUpdatingData().input === ""
+          ? ctrlUpdateTodo()
+          : ctrlAddTodo();
+      });
+      document.addEventListener("keydown", () => {
         if (event.key === "Enter") {
           event.preventDefault();
-          ctrlAddTodo();
+          todosCtrl.getUpdatingData().input ||
+          todosCtrl.getUpdatingData().input === ""
+            ? ctrlUpdateTodo()
+            : ctrlAddTodo();
         }
       });
       document
         .querySelector(DOM.todosContainer)
-        .addEventListener("click", ctrlDeleteTodo);
+        .addEventListener("click", event => {
+          todosCtrl.getUpdatingData().input ||
+          todosCtrl.getUpdatingData().input === ""
+            ? ctrlUpdateTodo()
+            : ctrlDeleteTodo(event);
+        });
 
       document
         .querySelector(DOM.todosContainer)
@@ -224,6 +271,7 @@ const app = (() => {
     };
 
     const ctrlAddTodo = () => {
+      console.log("add!");
       // 1: Get input value from the UI
       const input = UICtrl.getInput();
 
@@ -246,10 +294,12 @@ const app = (() => {
     };
 
     const ctrlDeleteTodo = event => {
+      console.log("delete");
       // 1: Get todo's id
       const ID = UICtrl.getSelectedTodoId(event);
 
       if (ID || ID === 0) {
+        console.log("delete completed");
         // 2: Delete todo obj from data structure
         todosCtrl.deleteTodo(ID);
 
@@ -266,7 +316,44 @@ const app = (() => {
 
     const ctrlDetectInput = event => {
       // 1: Get a changing input one by one
-      // 2: Add the changing input one by one to the data structure
+      const input = event.target.value;
+
+      // 2: Get a updating list's ID
+      const ID = parseInt(event.target.parentNode.parentNode.id);
+
+      // 3: Add the changing input one by one to the data structure
+      todosCtrl.storeUpdatingData(input, ID);
+    };
+
+    const ctrlUpdateTodo = () => {
+      console.log("update");
+
+      // 1: data.updatingDataの値を取得する
+      const obj = todosCtrl.getUpdatingData();
+
+      if (obj.input) {
+        // 2: input要素のvalue属性の値を更新する
+        UICtrl.updateValueAttr(obj.input, obj.id);
+
+        // 3:Get index for the list to be updated
+        const index = todosCtrl.handleIDs(obj.id);
+
+        // 4:該当するTodoのデータ保管庫のdescriptionの値を更新する
+        todosCtrl.updateItemDesc(index, obj.input);
+      } else {
+        // 更新した際、何も入力されずに、空文字の場合は更新前の値に戻す。
+
+        // 1: Get index
+        const index = todosCtrl.handleIDs(obj.id);
+
+        // 2: data.todoItemsから該当するtodoオブジェクトを取得する
+        const itemObj = todosCtrl.getTodoItem(index);
+
+        // 3:　該当するtodoのinput要素のvalue属性を元に戻す
+        UICtrl.updateValueAttr(itemObj.description, obj.id);
+      }
+      // 5: data.update.inputとdata.update.idをそれぞれnullに戻す
+      todosCtrl.resetUpdatingData();
     };
 
     return {
