@@ -9,6 +9,11 @@ const app = (() => {
       this.description = description;
     };
 
+    Todos.prototype.handleDone = function() {
+      this.done === "uncomp" ? (this.done = "comp") : (this.done = "uncomp");
+      return this.done;
+    };
+
     const data = {
       todoItems: [],
       overview: {
@@ -53,17 +58,17 @@ const app = (() => {
 
       calculateOverview: function() {
         // 1: Calaculate todos'total number
-        data.overview.total = this.getTotalNum();
+        data.overview.total = data.todoItems.length;
 
         // 2: Calaculate todos'uncomp number
-        const uncomp = data.todoItems.map(cur => {
-          if (cur.done === "uncomp") return cur;
+        let num = 0;
+        data.todoItems.map(cur => {
+          if (cur.done === "uncomp") num = num + 1;
         });
-
-        data.overview.uncomp = uncomp.length;
+        data.overview.uncomp = num;
 
         // 3: Calaculate todos'comp number (comp = total - uncomp)
-        data.overview.comp = data.overview.total - data.overview.uncomp;
+        data.overview.comp = data.overview.total - num;
       },
 
       getOverview: function() {
@@ -113,6 +118,17 @@ const app = (() => {
         data.todoItems[index].description = newDesc;
       },
 
+      changeDone: function(id) {
+        // 1: Get index of the specifc todo obj uising id
+        const index = this.handleIDs(id);
+
+        // 2: Get the specifc todo obj uising index
+        const todoObj = data.todoItems[index];
+
+        // 2: change the property 'done' of todo obj to comp or uncomp
+        return todoObj.handleDone();
+      },
+
       testData: function() {
         console.log(data);
       }
@@ -133,7 +149,9 @@ const app = (() => {
       totalLabel: ".overview__total--value",
       compLabel: ".overview__comp--value",
       uncompLabel: ".overview__uncomp--value",
-      itemDesc: "item__description" // Because of using this in classList.contains() argument, there is no need to use '.' before text.
+      itemDesc: "item__description", // Because of using this in classList.contains() argument, there is no need to use '.' before text.
+      doneBtn: "item__done--btn", // Because of using this in classList.contains() argument, there is no need to use '.' before text.
+      compMark: "comp"
     };
 
     const createNextList = () => {
@@ -154,7 +172,7 @@ const app = (() => {
 
       displayTodoItem: function(obj, num) {
         //1: Create html
-        const html = `<li class="item" id=${obj.id}> <div class="item__done"><button type="button" class="item__done--btn ${obj.done}"></button></div>
+        const html = `<li class="item" id=${obj.id}> <div class="item__done"><button type="button" class="item__done--btn"></button></div>
                       <div class="item__container"><input type="text" class="item__description" value=${obj.description} /><div class="item__delete">
                       <button type="button" class="item__delete--btn"><ion-icon name="close-circle-outline" class="item--delete--icon ${obj.id}"></ion-icon>
                       </button></div></div></li>`;
@@ -214,6 +232,10 @@ const app = (() => {
         document.getElementById(id).childNodes[3].childNodes[0].value = input;
       },
 
+      checkDone: function(node, done) {
+        node.classList.toggle(DOMstrings.compMark);
+      },
+
       getDOMstrings: function() {
         return DOMstrings;
       }
@@ -241,13 +263,20 @@ const app = (() => {
             : ctrlAddTodo();
         }
       });
+
       document
         .querySelector(DOM.todosContainer)
         .addEventListener("click", event => {
-          todosCtrl.getUpdatingData().input ||
-          todosCtrl.getUpdatingData().input === ""
-            ? ctrlUpdateTodo()
-            : ctrlDeleteTodo(event);
+          if (
+            todosCtrl.getUpdatingData().input ||
+            todosCtrl.getUpdatingData().input === ""
+          ) {
+            ctrlUpdateTodo();
+          } else if (event.target.classList.contains(DOM.doneBtn)) {
+            ctrlUpdateDone(event.target);
+          } else {
+            ctrlDeleteTodo(event);
+          }
         });
 
       document
@@ -354,6 +383,21 @@ const app = (() => {
       }
       // 5: data.update.inputとdata.update.idをそれぞれnullに戻す
       todosCtrl.resetUpdatingData();
+    };
+
+    const ctrlUpdateDone = node => {
+      console.log("change comp or uncomp");
+      // 1: Get id
+      const ID = parseInt(node.parentNode.parentNode.id);
+
+      // 2: Change 'todo' obj's property 'done' from 'uncomp' to 'comp'
+      todosCtrl.changeDone(ID);
+
+      // 3: Change the color of circle in todo list
+      UICtrl.checkDone(node);
+
+      // 4: Recalculate the overview
+      updateOverview();
     };
 
     return {
