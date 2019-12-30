@@ -45,10 +45,7 @@ button {
   color: #ecf0f1;
 }
 
-.overview__title {
-  font-size: 200%;
-}
-
+.overview__rate,
 .overview__total,
 .overview__comp,
 .overview__uncomp {
