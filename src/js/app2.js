@@ -19,7 +19,8 @@ const app = (() => {
       overview: {
         total: 0,
         comp: 0,
-        uncomp: 0
+        uncomp: 0,
+        percentage: -1
       },
       update: {
         input: null,
@@ -69,13 +70,22 @@ const app = (() => {
 
         // 3: Calaculate todos'comp number (comp = total - uncomp)
         data.overview.comp = data.overview.total - num;
+
+        // 4: Calculate 'Completion rate' ((comp / total) / 100)
+        if (data.todoItems.length > 0) {
+          data.overview.percentage =
+            (data.overview.comp / data.overview.total) * 100;
+        } else {
+          data.overview.percentage = -1;
+        }
       },
 
       getOverview: function() {
         return {
           total: data.overview.total,
           uncomp: data.overview.uncomp,
-          comp: data.overview.comp
+          comp: data.overview.comp,
+          perc: data.overview.percentage
         };
       },
 
@@ -148,6 +158,7 @@ const app = (() => {
       blankItem: ".blank",
       totalLabel: ".overview__total--value",
       compLabel: ".overview__comp--value",
+      rateLabel: ".overview__rate--value",
       uncompLabel: ".overview__uncomp--value",
       itemDesc: "item__description", // Because of using this in classList.contains() argument, there is no need to use '.' before text.
       doneBtn: "item__done--btn", // Because of using this in classList.contains() argument, there is no need to use '.' before text.
@@ -209,6 +220,13 @@ const app = (() => {
           overview.comp;
         document.querySelector(DOMstrings.uncompLabel).textContent =
           overview.uncomp;
+        if (overview.perc !== -1) {
+          document.querySelector(DOMstrings.rateLabel).textContent = Math.round(
+            overview.perc
+          );
+        } else {
+          document.querySelector(DOMstrings.rateLabel).textContent = "---";
+        }
       },
 
       getSelectedTodoId: function(event) {
@@ -232,7 +250,7 @@ const app = (() => {
         document.getElementById(id).childNodes[3].childNodes[0].value = input;
       },
 
-      checkDone: function(node, done) {
+      checkDone: function(node) {
         node.classList.toggle(DOMstrings.compMark);
       },
 
@@ -248,12 +266,14 @@ const app = (() => {
   const AppController = ((todosCtrl, UICtrl) => {
     const setUpEventListener = () => {
       const DOM = UICtrl.getDOMstrings();
+
       document.querySelector(DOM.addBtn).addEventListener("click", () => {
         todosCtrl.getUpdatingData().input ||
         todosCtrl.getUpdatingData().input === ""
           ? ctrlUpdateTodo()
           : ctrlAddTodo();
       });
+
       document.addEventListener("keydown", () => {
         if (event.key === "Enter") {
           event.preventDefault();
@@ -289,7 +309,7 @@ const app = (() => {
     };
 
     const updateOverview = () => {
-      // 1: Calculate overview (total, uncomp, comp)
+      // 1: Calculate overview (total, uncomp, comp, rate)
       todosCtrl.calculateOverview();
 
       // 2: Get overview
@@ -406,7 +426,8 @@ const app = (() => {
         UICtrl.displayOverview({
           total: 0,
           comp: 0,
-          uncomp: 0
+          uncomp: 0,
+          perc: -1
         });
         UICtrl.displayList();
         setUpEventListener();
