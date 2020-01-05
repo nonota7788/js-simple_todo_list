@@ -165,7 +165,6 @@ const app = (() => {
       compMark: "comp"
     };
 
-    //不要の可能性(ctrlAddTodo, ctrlDeleteTodoでは不要)
     const createNextList = () => {
       const html = `<li class="next"><div class="next__add"><ion-icon name="add" class="next__add--icon"></ion-icon>
                     </div><div class="next__container"><input type="text" class="next__description" /></div></li>`;
